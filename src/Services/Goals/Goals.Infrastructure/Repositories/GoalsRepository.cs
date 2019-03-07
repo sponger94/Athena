@@ -1,8 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-using Goals.Domain.AggregatesModel.GoalsAggregate;
+﻿using Goals.Domain.AggregatesModel.GoalsAggregate;
 using Goals.Domain.SeedWork;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Threading.Tasks;
 
 namespace Goals.Infrastructure.Repositories
 {
@@ -41,9 +41,12 @@ namespace Goals.Infrastructure.Repositories
             _context.Entry(goal).State = EntityState.Modified;
         }
 
-        public void Delete(int goalId)
+        public void Delete(params Goal[] goals)
         {
-            //TODO: Delete an entity
+            foreach (var goal in goals)
+            {
+                _context.Goals.Remove(goal);
+            }
         }
     }
 }

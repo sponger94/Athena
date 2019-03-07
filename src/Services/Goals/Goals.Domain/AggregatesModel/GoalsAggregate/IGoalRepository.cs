@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Goals.Domain.SeedWork;
 
 namespace Goals.Domain.AggregatesModel.GoalsAggregate
@@ -9,7 +10,7 @@ namespace Goals.Domain.AggregatesModel.GoalsAggregate
 
         void Update(Goal goal);
 
-        void Delete(int goalId);
+        void Delete(params Goal[] goals);
 
         Task<Goal> GetAsync(int goalId);
     }
