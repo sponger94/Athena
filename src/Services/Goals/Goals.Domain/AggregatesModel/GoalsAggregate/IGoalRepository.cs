@@ -9,6 +9,8 @@ namespace Goals.Domain.AggregatesModel.GoalsAggregate
 
         void Update(Goal goal);
 
+        void Delete(int goalId);
+
         Task<Goal> GetAsync(int goalId);
     }
 }

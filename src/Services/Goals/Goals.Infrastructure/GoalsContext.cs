@@ -8,12 +8,13 @@ using System;
 using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
+using Goals.Infrastructure.EntitiesConfiguration;
 
 namespace Goals.Infrastructure
 {
     public class GoalsContext : DbContext, IUnitOfWork
     {
-        public DbSet<Goal> Goal { get; set; }
+        public DbSet<Goal> Goals { get; set; }
 
         private readonly IMediator _mediator;
         public IDbContextTransaction CurrentDbContextTransaction { get; private set; }
@@ -30,7 +31,7 @@ namespace Goals.Infrastructure
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //TODO: Configuration files
+            modelBuilder.ApplyConfiguration(new GoalsEntityTypeConfiguration());
         }
 
         public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default(CancellationToken))
