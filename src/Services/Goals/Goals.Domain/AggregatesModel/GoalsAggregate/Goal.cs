@@ -7,13 +7,15 @@ namespace Goals.Domain.AggregatesModel.GoalsAggregate
 {
     public class Goal : Entity, IAggregateRoot
     {
+        public const string DefaultSchema = "goal";
+
         public string IdentityGuid { get; private set; }
 
         public string Title { get; private set; }
 
         public string Description { get; private set; }
 
-        public DateTime DateDue { get; private set; }
+        public DateTime? DateDue { get; private set; }
 
         public byte[] Image { get; private set; }
 
