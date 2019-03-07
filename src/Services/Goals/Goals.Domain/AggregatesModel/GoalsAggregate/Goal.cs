@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Goals.Domain.Events;
 using Goals.Domain.SeedWork;
 
 namespace Goals.Domain.AggregatesModel.GoalsAggregate
@@ -20,5 +21,28 @@ namespace Goals.Domain.AggregatesModel.GoalsAggregate
 
         private readonly List<Goal> _subGoals;
         public IReadOnlyCollection<Goal> SubGoals => _subGoals;
+
+        protected Goal(){ }
+
+        public Goal(string identityGuid, string title, string description, 
+            DateTime dateDue, byte[] image, GoalSettings goalSettings)
+        {
+            //TODO: Check for null
+            IdentityGuid = identityGuid;
+            Title = title;
+            Description = description;
+            DateDue = dateDue;
+            Image = image;
+            GoalSettings = goalSettings;
+
+            this.AddDomainEvent(new GoalCreatedDomainEvent(this));
+        }
+
+        public void AddSubGoal(string identityGuid, string title, string description, 
+            DateTime dateDue, byte[] image, GoalSettings goalSettings)
+        {
+            var subGoal = new Goal(identityGuid, title, description, dateDue, image, goalSettings);
+            _subGoals.Add(subGoal);
+        }
     }
 }

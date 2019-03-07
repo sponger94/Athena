@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using Goals.Domain.Exceptions;
 using Goals.Domain.SeedWork;
 
 namespace Goals.Domain.AggregatesModel.GoalsAggregate
@@ -23,13 +22,13 @@ namespace Goals.Domain.AggregatesModel.GoalsAggregate
         public static CommentsOption FromName(string name)
         {
             var option = List().SingleOrDefault(o => o.Name == name);
-            return option ?? throw new Exception($"Possible values for GoalViewOption: {string.Join(", ", List().Select(o => o.Name))}");
+            return option ?? throw new GoalsDomainException($"Possible values for GoalViewOption: {string.Join(", ", List().Select(o => o.Name))}");
         }
 
         public static CommentsOption From(int id)
         {
             var option = List().SingleOrDefault(o => o.Id == id);
-            return option ?? throw new Exception($"Possible values for GoalViewOption: {string.Join(", ", List().Select(o => o.Id))}");
+            return option ?? throw new GoalsDomainException($"Possible values for GoalViewOption: {string.Join(", ", List().Select(o => o.Id))}");
         }
     }
 }
