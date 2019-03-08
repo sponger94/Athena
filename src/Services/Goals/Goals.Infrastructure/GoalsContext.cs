@@ -14,6 +14,8 @@ namespace Goals.Infrastructure
 {
     public class GoalsContext : DbContext, IUnitOfWork
     {
+        public const string DefaultSchema = "goal";
+
         public DbSet<Goal> Goals { get; set; }
 
         private readonly IMediator _mediator;

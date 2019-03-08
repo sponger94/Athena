@@ -6,21 +6,22 @@ namespace Goals.Domain.AggregatesModel.GoalsAggregate
 {
     public class GoalSettings : ValueObject
     {
-        public ViewOption GoalViewOption { get; private set; }
-        public CommentsOption GoalCommentOption { get; private set; }
+        public AccessibilityModifier GoalViewAccessibility { get; private set; }
+        public AccessibilityModifier GoalCommentAccessibility { get; private set; }
 
         private GoalSettings() { }
 
-        public GoalSettings(ViewOption goalViewOption, CommentsOption commentsOption)
+        public GoalSettings(AccessibilityModifier goalViewAccessibility, 
+            AccessibilityModifier goalCommentAccessibility)
         {
-            GoalViewOption = goalViewOption;
-            GoalCommentOption = commentsOption;
+            GoalViewAccessibility = goalViewAccessibility;
+            GoalCommentAccessibility = goalCommentAccessibility;
         }
 
         protected override IEnumerable<object> GetAtomicValues()
         {
-            yield return GoalViewOption;
-            yield return GoalCommentOption;
+            yield return GoalViewAccessibility;
+            yield return GoalCommentAccessibility;
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Goals.Domain.AggregatesModel.GoalsAggregate
 
         void Update(Goal goal);
 
-        void Delete(params Goal[] goals);
+        void Delete(Goal goal);
 
         Task<Goal> GetAsync(int goalId);
     }

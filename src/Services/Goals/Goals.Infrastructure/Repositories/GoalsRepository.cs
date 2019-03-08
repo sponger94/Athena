@@ -41,12 +41,9 @@ namespace Goals.Infrastructure.Repositories
             _context.Entry(goal).State = EntityState.Modified;
         }
 
-        public void Delete(params Goal[] goals)
+        public void Delete(Goal goal)
         {
-            foreach (var goal in goals)
-            {
-                _context.Goals.Remove(goal);
-            }
+            _context.Goals.Remove(goal);
         }
     }
 }
