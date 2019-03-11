@@ -18,11 +18,11 @@ namespace Goals.Infrastructure.EntitiesConfiguration
             goalConfig.Property(g => g.Id)
                 .ForSqlServerUseSequenceHiLo("goalseq", GoalsContext.DefaultSchema);
 
-            goalConfig.Property(g => g.UserId)
+            goalConfig.Property(g => g.IdentityGuid)
                 .HasMaxLength(200)
                 .IsRequired();
 
-            goalConfig.HasIndex("UserId");
+            goalConfig.HasIndex("IdentityGuid");
 
             goalConfig.Property(g => g.Title)
                 .HasMaxLength(64)

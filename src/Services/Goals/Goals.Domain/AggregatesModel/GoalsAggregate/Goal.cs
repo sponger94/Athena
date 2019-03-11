@@ -19,22 +19,29 @@ namespace Goals.Domain.AggregatesModel.GoalsAggregate
 
         public GoalSettings GoalSettings { get; private set; }
 
+        public GoalStatus GoalStatus { get; private set; }
+
         private readonly List<GoalDependency> _dependencies;
         public IReadOnlyCollection<GoalDependency> Dependencies => _dependencies;
 
         protected Goal()
         {
             _dependencies = new List<GoalDependency>();
+            GoalStatus = GoalStatus.InProgress;
         }
 
         public Goal(string identityGuid, string title, GoalSettings goalSettings,
-            string description = null, DateTime? dateDue = null, byte[] image = null) : this()
+            string description = null, DateTime? dateDue = null, byte[] image = null) 
+            : this()
         {
             IdentityGuid = !string.IsNullOrWhiteSpace(identityGuid) ? identityGuid : throw new ArgumentException("IdentityGuid can not be null or whitespace.");
             Title = !string.IsNullOrWhiteSpace(title) ? title : throw new ArgumentNullException(nameof(title));
             GoalSettings = goalSettings ?? throw new ArgumentNullException(nameof(goalSettings));
-            Description = description;
+            if (dateDue != null && dateDue.Value <= DateTime.Now)
+                throw new ArgumentException("The due date of the goal can not be less than or equal to DateTime.Now.");
+
             DateDue = dateDue;
+            Description = description;
             Image = image;
 
             this.AddDomainEvent(new GoalCreatedDomainEvent(this));
@@ -49,6 +56,34 @@ namespace Goals.Domain.AggregatesModel.GoalsAggregate
         public void RemoveDependency(GoalDependency dependency)
         {
             _dependencies.Remove(dependency);
+        }
+
+        public void SetTitle(string title)
+        {
+            Title = title;
+        }
+
+        public void SetDescription(string description)
+        {
+            Description = description;
+        }
+
+        public void SetDateDue(DateTime dateDue)
+        {
+            if (dateDue <= DateTime.Now)
+                throw new ArgumentException("The due date of the goal can not be less than or equal to DateTime.Now.");
+           
+            DateDue = dateDue;
+        }
+
+        public void SetCompletedStatus()
+        {
+            GoalStatus = GoalStatus.Completed;
+        }
+
+        public void SetFailedStatus()
+        {
+            GoalStatus = GoalStatus.Failed;
         }
 
         public void RemoveGoal()
