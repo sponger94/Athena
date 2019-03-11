@@ -7,7 +7,7 @@ namespace Goals.Domain.AggregatesModel.GoalsAggregate
 {
     public class Goal : Entity, IAggregateRoot
     {
-        public int UserId { get; private set; }
+        public string IdentityGuid { get; private set; }
 
         public string Title { get; private set; }
 
@@ -27,10 +27,10 @@ namespace Goals.Domain.AggregatesModel.GoalsAggregate
             _dependencies = new List<GoalDependency>();
         }
 
-        public Goal(int userId, string title, GoalSettings goalSettings,
+        public Goal(string identityGuid, string title, GoalSettings goalSettings,
             string description = null, DateTime? dateDue = null, byte[] image = null) : this()
         {
-            UserId = userId != 0 ? userId : throw new ArgumentException("UserId can not be equal to 0.");
+            IdentityGuid = !string.IsNullOrWhiteSpace(identityGuid) ? identityGuid : throw new ArgumentException("IdentityGuid can not be null or whitespace.");
             Title = !string.IsNullOrWhiteSpace(title) ? title : throw new ArgumentNullException(nameof(title));
             GoalSettings = goalSettings ?? throw new ArgumentNullException(nameof(goalSettings));
             Description = description;
@@ -49,6 +49,11 @@ namespace Goals.Domain.AggregatesModel.GoalsAggregate
         public void RemoveDependency(GoalDependency dependency)
         {
             _dependencies.Remove(dependency);
+        }
+
+        public void RemoveGoal()
+        {
+            this.AddDomainEvent(new GoalRemovedDomainEvent(this));
         }
     }
 }

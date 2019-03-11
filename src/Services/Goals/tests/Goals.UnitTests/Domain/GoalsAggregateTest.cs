@@ -1,9 +1,8 @@
-using System;
 using Xunit;
 
-namespace Ordering.UnitTests
+namespace Goals.UnitTests.Domain
 {
-    public class UnitTest1
+    public class GoalsAggregateTest
     {
         [Fact]
         public void Test1()

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Goals.API.Infrastructure.AutofacModules;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -56,6 +57,9 @@ namespace Goals.API
 
             var container = new ContainerBuilder();
             container.Populate(services);
+
+            container.RegisterModule(new ApplicationModule(Configuration["ConnectionString"]));
+
             return new AutofacServiceProvider(container.Build());
         }
 
