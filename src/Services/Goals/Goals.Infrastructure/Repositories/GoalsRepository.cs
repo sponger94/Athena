@@ -29,8 +29,8 @@ namespace Goals.Infrastructure.Repositories
             if (goal != null)
             {
                 await _context.Entry(goal)
-                    .Collection(g => g.SubGoals).LoadAsync();
-                //TODO: Do I have to load owned entity?!
+                    .Collection(g => g.Dependencies).LoadAsync();
+                //TODO: Do I have to load that?
             }
 
             return goal;

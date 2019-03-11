@@ -15,20 +15,20 @@ namespace Goals.Domain.AggregatesModel.GoalsAggregate
 
         public DateTime? DateDue { get; private set; }
 
-        public byte?[] Image { get; private set; }
+        public byte[] Image { get; private set; }
 
         public GoalSettings GoalSettings { get; private set; }
 
-        private readonly List<Goal> _subGoals;
-        public IReadOnlyCollection<Goal> SubGoals => _subGoals;
+        private readonly List<GoalDependency> _dependencies;
+        public IReadOnlyCollection<GoalDependency> Dependencies => _dependencies;
 
         protected Goal()
         {
-            _subGoals = new List<Goal>();
+            _dependencies = new List<GoalDependency>();
         }
 
         public Goal(int userId, string title, GoalSettings goalSettings,
-            string description = null, DateTime? dateDue = null, byte?[] image = null) : this()
+            string description = null, DateTime? dateDue = null, byte[] image = null) : this()
         {
             UserId = userId != 0 ? userId : throw new ArgumentException("UserId can not be equal to 0.");
             Title = !string.IsNullOrWhiteSpace(title) ? title : throw new ArgumentNullException(nameof(title));
@@ -40,11 +40,15 @@ namespace Goals.Domain.AggregatesModel.GoalsAggregate
             this.AddDomainEvent(new GoalCreatedDomainEvent(this));
         }
 
-        public void AddSubGoal(string identityGuid, string title, GoalSettings goalSettings,
-            string description = null, DateTime? dateDue = null, byte?[] image = null)
+        public void AddDependency(GoalDependency dependency)
         {
-            var subGoal = new Goal(identityGuid, title, goalSettings, description, dateDue, image);
-            _subGoals.Add(subGoal);
+            //TODO: Should I bother with the given dependencies Id and this goals id equality?
+            _dependencies.Add(dependency);
+        }
+
+        public void RemoveDependency(GoalDependency dependency)
+        {
+            _dependencies.Remove(dependency);
         }
     }
 }

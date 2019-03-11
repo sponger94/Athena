@@ -26,19 +26,18 @@ namespace Goals.Infrastructure.EntitiesConfiguration
 
             goalConfig.Property(g => g.Title)
                 .HasMaxLength(64)
-                .IsRequired(true);
+                .IsRequired();
 
             goalConfig.OwnsOne(g => g.GoalSettings);
             goalConfig.Property(g => g.Description).IsRequired(false);
             goalConfig.Property(g => g.DateDue).IsRequired(false);
             goalConfig.Property(g => g.Image).IsRequired(false);
 
-            goalConfig.HasMany(g => g.SubGoals)
+            goalConfig.HasMany(g => g.Dependencies)
                 .WithOne()
-                .HasForeignKey("ParentId")
                 .OnDelete(DeleteBehavior.Cascade);
 
-            var navigation = goalConfig.Metadata.FindNavigation(nameof(Goal.SubGoals));
+            var navigation = goalConfig.Metadata.FindNavigation(nameof(Goal.Dependencies));
             navigation.SetPropertyAccessMode(PropertyAccessMode.Field);
         }
     }

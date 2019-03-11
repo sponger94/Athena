@@ -1,25 +1,31 @@
 ﻿using Goals.Domain.SeedWork;
-using System;
 using System.Collections.Generic;
 
 namespace Goals.Domain.AggregatesModel.GoalsAggregate
 {
     public class GoalSettings : ValueObject
     {
+        private int _goalViewAccessibilityId;
         public AccessibilityModifier GoalViewAccessibility { get; private set; }
+
+        private int _goalCommentAccessibilityId;
         public AccessibilityModifier GoalCommentAccessibility { get; private set; }
 
-        private GoalSettings() { }
+        /// <summary>
+        /// Required by EF
+        /// </summary>
+        private GoalSettings()
+        { }
 
-        public GoalSettings(AccessibilityModifier goalViewAccessibility, 
-            AccessibilityModifier goalCommentAccessibility)
+        public GoalSettings(int goalViewAccessibilityId, int goalCommentAccessibilityId)
         {
-            GoalViewAccessibility = goalViewAccessibility;
-            GoalCommentAccessibility = goalCommentAccessibility;
+            _goalViewAccessibilityId = goalViewAccessibilityId;
+            _goalCommentAccessibilityId = goalCommentAccessibilityId;
         }
 
         protected override IEnumerable<object> GetAtomicValues()
         {
+            //TODO: Should I return private foreign keys also?
             yield return GoalViewAccessibility;
             yield return GoalCommentAccessibility;
         }

@@ -33,7 +33,10 @@ namespace Goals.Infrastructure
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.ApplyConfiguration(new AccessibilityModifierEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new GoalDependencyEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new GoalsEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new GoalSettingsEntityTypeConfiguration());
         }
 
         public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default(CancellationToken))
