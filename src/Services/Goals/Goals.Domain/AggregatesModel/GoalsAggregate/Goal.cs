@@ -22,9 +22,12 @@ namespace Goals.Domain.AggregatesModel.GoalsAggregate
 
         public GoalStatus GoalStatus { get; private set; }
 
+        private List<GoalStep> _steps;
+        public IReadOnlyCollection<GoalStep> Steps => _steps;
+
         protected Goal()
         {
-            _dependencies = new List<GoalDependency>();
+            _steps = new List<GoalStep>();
             GoalStatus = GoalStatus.InProgress;
         }
 

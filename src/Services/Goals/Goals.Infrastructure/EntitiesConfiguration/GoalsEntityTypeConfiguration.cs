@@ -33,11 +33,24 @@ namespace Goals.Infrastructure.EntitiesConfiguration
             goalConfig.Property(g => g.DateDue).IsRequired(false);
             goalConfig.Property(g => g.Image).IsRequired(false);
 
-            goalConfig.HasMany(g => g.Dependencies)
-                .WithOne()
-                .OnDelete(DeleteBehavior.Cascade);
+            goalConfig.OwnsMany(g => g.Steps, stepConfig =>
+            {
+                stepConfig.HasForeignKey("GoalId");
 
-            var navigation = goalConfig.Metadata.FindNavigation(nameof(Goal.Dependencies));
+                stepConfig.Property(s => s.Name)
+                    .HasMaxLength(128)
+                    .IsRequired();
+
+                stepConfig.Property(s => s.Description)
+                    .IsRequired(false);
+
+                stepConfig.Property(s => s.DueDate)
+                    .IsRequired(false);
+
+                stepConfig.HasKey("GoalId", "Name", "Description", "DueDate");
+            });
+
+            var navigation = goalConfig.Metadata.FindNavigation(nameof(Goal.Steps));
             navigation.SetPropertyAccessMode(PropertyAccessMode.Field);
         }
     }

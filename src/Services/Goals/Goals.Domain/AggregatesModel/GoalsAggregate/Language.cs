@@ -6,7 +6,8 @@ using Goals.Domain.Exceptions;
 
 namespace Goals.Domain.AggregatesModel.GoalsAggregate
 {
-    public class Language : Enumeration
+    public class Language 
+        : Enumeration
     {
         public static Language Russian = new Language(1, nameof(Russian).ToLowerInvariant());
         public static Language English = new Language(2, nameof(English).ToLowerInvariant());

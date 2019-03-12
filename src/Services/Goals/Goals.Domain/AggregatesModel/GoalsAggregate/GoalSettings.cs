@@ -3,7 +3,8 @@ using System.Collections.Generic;
 
 namespace Goals.Domain.AggregatesModel.GoalsAggregate
 {
-    public class GoalSettings : ValueObject
+    public class GoalSettings 
+        : ValueObject
     {
         private int _goalViewAccessibilityId;
         public AccessibilityModifier GoalViewAccessibility { get; private set; }
@@ -25,9 +26,8 @@ namespace Goals.Domain.AggregatesModel.GoalsAggregate
 
         protected override IEnumerable<object> GetAtomicValues()
         {
-            //TODO: Should I return private foreign keys also?
-            yield return GoalViewAccessibility;
-            yield return GoalCommentAccessibility;
+            yield return _goalViewAccessibilityId;
+            yield return _goalCommentAccessibilityId;
         }
     }
 }
