@@ -22,9 +22,6 @@ namespace Goals.Domain.AggregatesModel.GoalsAggregate
 
         public GoalStatus GoalStatus { get; private set; }
 
-        private readonly List<GoalDependency> _dependencies;
-        public IReadOnlyCollection<GoalDependency> Dependencies => _dependencies;
-
         protected Goal()
         {
             _dependencies = new List<GoalDependency>();
@@ -49,30 +46,6 @@ namespace Goals.Domain.AggregatesModel.GoalsAggregate
 
             Description = description;
             Image = image;
-        }
-
-        public void AddDependency(GoalDependency dependency)
-        {
-            if(dependency == null)
-                throw new ArgumentNullException(nameof(dependency));
-
-            //TODO: GoalId should be set automatically on saving through EF
-            //if (dependency.GoalId != Id)
-            //    throw new GoalsDomainException("The dependency provided has a different goal id and thus can not be added.");
-
-            var dependencyGoal = dependency.DependentOnGoal;
-            if (DateDue != null
-               && dependencyGoal.DateDue != null
-               && dependencyGoal.GoalStatus.Id != GoalStatus.Completed.Id
-               && dependencyGoal.DateDue > DateDue)
-                AddDomainEvent(new DependencyDateDueExceededDomainEvent(this, dependency));
-
-            _dependencies.Add(dependency);
-        }
-
-        public void RemoveDependency(GoalDependency dependency)
-        {
-            _dependencies.Remove(dependency);
         }
 
         public void SetTitle(string title)

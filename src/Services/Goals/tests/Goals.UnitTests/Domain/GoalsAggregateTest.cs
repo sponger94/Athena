@@ -88,32 +88,5 @@ namespace Goals.UnitTests.Domain
         }
 
         #endregion
-
-        [Fact]
-        public void AddDependency_NullDependencyParam_ArgumentNullExceptionThrown()
-        {
-            //Act - Assert
-            Assert.Throws<ArgumentNullException>(() =>_testGoal.AddDependency(null));
-        }
-
-        [Fact]
-        public void AddDependency_DependencyDueDateLargerThanMainGoal_ArgumentNullExceptionThrown()
-        {
-            //Arrange
-            var identityGuid = Guid.NewGuid().ToString();
-            var title = "Test Goal";
-            var goalSettings = new GoalSettings(AccessibilityModifier.Public.Id, AccessibilityModifier.Public.Id);
-            _testGoal.SetDateDue(DateTime.Now.AddDays(1));
-            
-            //Setting SubGoals DueDate to be larger
-            var subGoal = new Goal(identityGuid, title, goalSettings, dateDue: DateTime.Now.AddDays(3));
-            var dependency = new GoalDependency(subGoal, DependencyType.SubTask.Id);
-            
-            //Act
-            _testGoal.AddDependency(dependency);
-
-            //Assert
-            Assert.NotNull(_testGoal.DomainEvents.SingleOrDefault(d => d is DependencyDateDueExceededDomainEvent));
-        }
     }
 }

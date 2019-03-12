@@ -35,8 +35,6 @@ namespace Goals.Infrastructure
         {
             modelBuilder
                 .ApplyConfiguration(new AccessibilityModifierEntityTypeConfiguration())
-                .ApplyConfiguration(new DependencyTypeEntityTypeConfiguration())
-                .ApplyConfiguration(new GoalDependencyEntityTypeConfiguration())
                 .ApplyConfiguration(new GoalsEntityTypeConfiguration())
                 .ApplyConfiguration(new GoalSettingsEntityTypeConfiguration())
                 .ApplyConfiguration(new GoalStatusEntityTypeConfiguration());
