@@ -29,12 +29,25 @@ namespace Goals.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "goal_statuses",
+                schema: "goal",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false, defaultValue: 1),
+                    Name = table.Column<string>(maxLength: 32, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_goal_statuses", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "goals",
                 schema: "goal",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false),
-                    UserId = table.Column<int>(maxLength: 200, nullable: false),
+                    IdentityGuid = table.Column<string>(maxLength: 200, nullable: false),
                     Title = table.Column<string>(maxLength: 64, nullable: false),
                     Description = table.Column<string>(nullable: true),
                     DateDue = table.Column<DateTime>(nullable: true),
@@ -42,11 +55,19 @@ namespace Goals.Infrastructure.Migrations
                     GoalSettings__goalViewAccessibilityId = table.Column<int>(nullable: false),
                     GoalSettings__goalCommentAccessibilityId = table.Column<int>(nullable: false),
                     GoalSettings_GoalCommentAccessibilityId = table.Column<int>(nullable: true),
-                    GoalSettings_GoalViewAccessibilityId = table.Column<int>(nullable: true)
+                    GoalSettings_GoalViewAccessibilityId = table.Column<int>(nullable: true),
+                    GoalStatusId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_goals", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_goals_goal_statuses_GoalStatusId",
+                        column: x => x.GoalStatusId,
+                        principalSchema: "goal",
+                        principalTable: "goal_statuses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_goals_accessibility_modifiers_GoalSettings__goalCommentAccessibilityId",
                         column: x => x.GoalSettings__goalCommentAccessibilityId,
@@ -64,26 +85,20 @@ namespace Goals.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "GoalDependency",
+                name: "GoalStep",
                 columns: table => new
                 {
-                    GoalId = table.Column<int>(nullable: false),
-                    DependentOnGoalId = table.Column<int>(nullable: false),
-                    GoalId1 = table.Column<int>(nullable: true)
+                    Name = table.Column<string>(maxLength: 128, nullable: false),
+                    Description = table.Column<string>(nullable: false),
+                    DueDate = table.Column<DateTime>(nullable: false),
+                    GoalId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GoalDependency", x => new { x.GoalId, x.DependentOnGoalId });
+                    table.PrimaryKey("PK_GoalStep", x => new { x.GoalId, x.Name, x.Description, x.DueDate });
                     table.ForeignKey(
-                        name: "FK_GoalDependency_goals_DependentOnGoalId",
-                        column: x => x.DependentOnGoalId,
-                        principalSchema: "goal",
-                        principalTable: "goals",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_GoalDependency_goals_GoalId1",
-                        column: x => x.GoalId1,
+                        name: "FK_GoalStep_goals_GoalId",
+                        column: x => x.GoalId,
                         principalSchema: "goal",
                         principalTable: "goals",
                         principalColumn: "Id",
@@ -91,25 +106,16 @@ namespace Goals.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_GoalDependency_DependentOnGoalId",
-                table: "GoalDependency",
-                column: "DependentOnGoalId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_GoalDependency_GoalId1",
-                table: "GoalDependency",
-                column: "GoalId1");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_GoalDependency_GoalId_DependentOnGoalId",
-                table: "GoalDependency",
-                columns: new[] { "GoalId", "DependentOnGoalId" });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_goals_UserId",
+                name: "IX_goals_GoalStatusId",
                 schema: "goal",
                 table: "goals",
-                column: "UserId");
+                column: "GoalStatusId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_goals_IdentityGuid",
+                schema: "goal",
+                table: "goals",
+                column: "IdentityGuid");
 
             migrationBuilder.CreateIndex(
                 name: "IX_goals_GoalSettings__goalCommentAccessibilityId",
@@ -127,10 +133,14 @@ namespace Goals.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "GoalDependency");
+                name: "GoalStep");
 
             migrationBuilder.DropTable(
                 name: "goals",
+                schema: "goal");
+
+            migrationBuilder.DropTable(
+                name: "goal_statuses",
                 schema: "goal");
 
             migrationBuilder.DropTable(

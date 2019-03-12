@@ -29,7 +29,7 @@ namespace Goals.Infrastructure.Repositories
             if (goal != null)
             {
                 await _context.Entry(goal)
-                    .Collection(g => g.Dependencies).LoadAsync();
+                    .Collection(g => g.Steps).LoadAsync();
                 //TODO: Do I have to load that?
             }
 

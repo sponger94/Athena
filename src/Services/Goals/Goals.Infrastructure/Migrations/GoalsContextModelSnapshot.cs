@@ -46,43 +46,47 @@ namespace Goals.Infrastructure.Migrations
 
                     b.Property<string>("Description");
 
+                    b.Property<int?>("GoalStatusId");
+
+                    b.Property<string>("IdentityGuid")
+                        .IsRequired()
+                        .HasMaxLength(200);
+
                     b.Property<byte[]>("Image");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(64);
 
-                    b.Property<int>("UserId")
-                        .HasMaxLength(200);
-
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("GoalStatusId");
+
+                    b.HasIndex("IdentityGuid");
 
                     b.ToTable("goals","goal");
                 });
 
-            modelBuilder.Entity("Goals.Domain.AggregatesModel.GoalsAggregate.GoalDependency", b =>
+            modelBuilder.Entity("Goals.Domain.AggregatesModel.GoalsAggregate.GoalStatus", b =>
                 {
-                    b.Property<int>("GoalId");
+                    b.Property<int>("Id")
+                        .HasDefaultValue(1);
 
-                    b.Property<int>("DependentOnGoalId");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(32);
 
-                    b.Property<int?>("GoalId1");
+                    b.HasKey("Id");
 
-                    b.HasKey("GoalId", "DependentOnGoalId");
-
-                    b.HasIndex("DependentOnGoalId");
-
-                    b.HasIndex("GoalId1");
-
-                    b.HasIndex("GoalId", "DependentOnGoalId");
-
-                    b.ToTable("GoalDependency");
+                    b.ToTable("goal_statuses","goal");
                 });
 
             modelBuilder.Entity("Goals.Domain.AggregatesModel.GoalsAggregate.Goal", b =>
                 {
+                    b.HasOne("Goals.Domain.AggregatesModel.GoalsAggregate.GoalStatus", "GoalStatus")
+                        .WithMany()
+                        .HasForeignKey("GoalStatusId");
+
                     b.OwnsOne("Goals.Domain.AggregatesModel.GoalsAggregate.GoalSettings", "GoalSettings", b1 =>
                         {
                             b1.Property<int>("GoalId");
@@ -118,19 +122,27 @@ namespace Goals.Infrastructure.Migrations
                                 .HasForeignKey("_goalViewAccessibilityId")
                                 .OnDelete(DeleteBehavior.Cascade);
                         });
-                });
 
-            modelBuilder.Entity("Goals.Domain.AggregatesModel.GoalsAggregate.GoalDependency", b =>
-                {
-                    b.HasOne("Goals.Domain.AggregatesModel.GoalsAggregate.Goal", "DependentOnGoal")
-                        .WithMany()
-                        .HasForeignKey("DependentOnGoalId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                    b.OwnsMany("Goals.Domain.AggregatesModel.GoalsAggregate.GoalStep", "Steps", b1 =>
+                        {
+                            b1.Property<int>("GoalId");
 
-                    b.HasOne("Goals.Domain.AggregatesModel.GoalsAggregate.Goal")
-                        .WithMany("Dependencies")
-                        .HasForeignKey("GoalId1")
-                        .OnDelete(DeleteBehavior.Cascade);
+                            b1.Property<string>("Name")
+                                .HasMaxLength(128);
+
+                            b1.Property<string>("Description");
+
+                            b1.Property<DateTime?>("DueDate");
+
+                            b1.HasKey("GoalId", "Name", "Description", "DueDate");
+
+                            b1.ToTable("GoalStep");
+
+                            b1.HasOne("Goals.Domain.AggregatesModel.GoalsAggregate.Goal")
+                                .WithMany("Steps")
+                                .HasForeignKey("GoalId")
+                                .OnDelete(DeleteBehavior.Cascade);
+                        });
                 });
 #pragma warning restore 612, 618
         }
