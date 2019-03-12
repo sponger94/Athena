@@ -44,18 +44,21 @@ namespace Goals.Domain.AggregatesModel.GoalsAggregate
             string description = null, DateTime? dateDue = null, byte[] image = null)
             : this(identityGuid, title, goalSettings)
         {
-            if (dateDue != null && dateDue.Value <= DateTime.Now)
-                throw new ArgumentException("The due date of the goal can not be less than or equal to DateTime.Now.");
+            if(dateDue != null)
+                SetDateDue(dateDue.Value);
 
-            DateDue = dateDue;
             Description = description;
             Image = image;
         }
 
         public void AddDependency(GoalDependency dependency)
         {
-            if (dependency.GoalId != Id)
-                throw new GoalsDomainException("The dependency provided has a different goal id and thus can not be added.");
+            if(dependency == null)
+                throw new ArgumentNullException(nameof(dependency));
+
+            //TODO: GoalId should be set automatically on saving through EF
+            //if (dependency.GoalId != Id)
+            //    throw new GoalsDomainException("The dependency provided has a different goal id and thus can not be added.");
 
             var dependencyGoal = dependency.DependentOnGoal;
             if (DateDue != null
@@ -84,7 +87,7 @@ namespace Goals.Domain.AggregatesModel.GoalsAggregate
 
         public void SetDateDue(DateTime dateDue)
         {
-            if (dateDue <= DateTime.Now)
+            if (dateDue <= DateTime.Now.AddMinutes(1))
                 throw new ArgumentException("The due date of the goal can not be less than or equal to DateTime.Now.");
 
             DateDue = dateDue;

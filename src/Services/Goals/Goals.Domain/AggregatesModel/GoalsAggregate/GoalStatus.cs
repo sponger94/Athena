@@ -10,7 +10,7 @@ namespace Goals.Domain.AggregatesModel.GoalsAggregate
         : Enumeration
     {
         public static GoalStatus InProgress = new GoalStatus(1, nameof(InProgress).ToLowerInvariant());
-        public static GoalStatus Completed = new GoalStatus(1, nameof(Completed).ToLowerInvariant());
+        public static GoalStatus Completed = new GoalStatus(2, nameof(Completed).ToLowerInvariant());
         public static GoalStatus Failed = new GoalStatus(3, nameof(Failed).ToLowerInvariant());
 
         public GoalStatus(int id, string name)

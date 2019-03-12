@@ -17,10 +17,9 @@ namespace Goals.Domain.AggregatesModel.GoalsAggregate
         protected GoalDependency()
         { } //TODO: Review if it's needed
 
-        public GoalDependency(int goalId, int dependentOnGoalId, int dependencyTypeId)
+        public GoalDependency(Goal dependentOnGoal, int dependencyTypeId)
         {
-            GoalId = goalId;
-            DependentOnGoalId = dependentOnGoalId;
+            DependentOnGoal = dependentOnGoal;
             _dependencyTypeId = dependencyTypeId;
         }
 
