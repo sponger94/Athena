@@ -1,4 +1,5 @@
 ﻿using Goals.Domain.Events;
+using Goals.Domain.Exceptions;
 using Goals.Domain.SeedWork;
 using System;
 using System.Collections.Generic;
@@ -30,26 +31,39 @@ namespace Goals.Domain.AggregatesModel.GoalsAggregate
             GoalStatus = GoalStatus.InProgress;
         }
 
-        public Goal(string identityGuid, string title, GoalSettings goalSettings,
-            string description = null, DateTime? dateDue = null, byte[] image = null) 
+        public Goal(string identityGuid, string title, GoalSettings goalSettings)
             : this()
         {
             IdentityGuid = !string.IsNullOrWhiteSpace(identityGuid) ? identityGuid : throw new ArgumentException("IdentityGuid can not be null or whitespace.");
-            Title = !string.IsNullOrWhiteSpace(title) ? title : throw new ArgumentNullException(nameof(title));
+            Title = !string.IsNullOrWhiteSpace(title) ? title : throw new ArgumentException(nameof(title));
             GoalSettings = goalSettings ?? throw new ArgumentNullException(nameof(goalSettings));
+            this.AddDomainEvent(new GoalCreatedDomainEvent(this));
+        }
+
+        public Goal(string identityGuid, string title, GoalSettings goalSettings,
+            string description = null, DateTime? dateDue = null, byte[] image = null)
+            : this(identityGuid, title, goalSettings)
+        {
             if (dateDue != null && dateDue.Value <= DateTime.Now)
                 throw new ArgumentException("The due date of the goal can not be less than or equal to DateTime.Now.");
 
             DateDue = dateDue;
             Description = description;
             Image = image;
-
-            this.AddDomainEvent(new GoalCreatedDomainEvent(this));
         }
 
         public void AddDependency(GoalDependency dependency)
         {
-            //TODO: Should I bother with the given dependencies Id and this goals id equality?
+            if (dependency.GoalId != Id)
+                throw new GoalsDomainException("The dependency provided has a different goal id and thus can not be added.");
+
+            var dependencyGoal = dependency.DependentOnGoal;
+            if (DateDue != null
+               && dependencyGoal.DateDue != null
+               && dependencyGoal.GoalStatus.Id != GoalStatus.Completed.Id
+               && dependencyGoal.DateDue > DateDue)
+                AddDomainEvent(new DependencyDateDueExceededDomainEvent(this, dependency));
+
             _dependencies.Add(dependency);
         }
 
@@ -72,7 +86,7 @@ namespace Goals.Domain.AggregatesModel.GoalsAggregate
         {
             if (dateDue <= DateTime.Now)
                 throw new ArgumentException("The due date of the goal can not be less than or equal to DateTime.Now.");
-           
+
             DateDue = dateDue;
         }
 
