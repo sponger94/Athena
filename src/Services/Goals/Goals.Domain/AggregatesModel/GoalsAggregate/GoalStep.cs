@@ -1,6 +1,6 @@
-﻿using Goals.Domain.SeedWork;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Goals.Domain.SeedWork;
 
 namespace Goals.Domain.AggregatesModel.GoalsAggregate
 {

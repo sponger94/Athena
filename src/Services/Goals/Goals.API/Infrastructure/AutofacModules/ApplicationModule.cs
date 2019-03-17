@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Autofac;
+﻿using Autofac;
 using Goals.Domain.AggregatesModel.GoalsAggregate;
-using Goals.Infrastructure.Repositories;
+using Tasks.Infrastructure.Repositories;
 
 namespace Goals.API.Infrastructure.AutofacModules
 {

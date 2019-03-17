@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Goals.Infrastructure.EntitiesConfiguration
+namespace Tasks.Infrastructure.EntitiesConfiguration
 {
     public class GoalStatusEntityTypeConfiguration
         : IEntityTypeConfiguration<GoalStatus>

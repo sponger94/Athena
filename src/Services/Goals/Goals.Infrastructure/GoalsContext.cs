@@ -1,6 +1,4 @@
-﻿using Goals.Domain.AggregatesModel.GoalsAggregate;
-using Goals.Domain.SeedWork;
-using MediatR;
+﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -8,9 +6,11 @@ using System;
 using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
-using Goals.Infrastructure.EntitiesConfiguration;
+using Goals.Domain.AggregatesModel.GoalsAggregate;
+using Goals.Domain.SeedWork;
+using Tasks.Infrastructure.EntitiesConfiguration;
 
-namespace Goals.Infrastructure
+namespace Tasks.Infrastructure
 {
     public class GoalsContext : DbContext, IUnitOfWork
     {
@@ -35,6 +35,7 @@ namespace Goals.Infrastructure
         {
             modelBuilder
                 .ApplyConfiguration(new AccessibilityModifierEntityTypeConfiguration())
+                //.ApplyConfiguration(new GoalDiaryEntityTypeConfiguration())
                 .ApplyConfiguration(new GoalsEntityTypeConfiguration())
                 .ApplyConfiguration(new GoalSettingsEntityTypeConfiguration())
                 .ApplyConfiguration(new GoalStatusEntityTypeConfiguration());

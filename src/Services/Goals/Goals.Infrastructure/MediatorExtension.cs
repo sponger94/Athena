@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Goals.Domain.SeedWork;
 using MediatR;
 
-namespace Goals.Infrastructure
+namespace Tasks.Infrastructure
 {
     public static class MediatorExtension
     {

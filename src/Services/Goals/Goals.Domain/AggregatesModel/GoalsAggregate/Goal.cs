@@ -1,8 +1,7 @@
-﻿using Goals.Domain.Events;
-using Goals.Domain.Exceptions;
-using Goals.Domain.SeedWork;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Goals.Domain.Events;
+using Goals.Domain.SeedWork;
 
 namespace Goals.Domain.AggregatesModel.GoalsAggregate
 {
@@ -25,9 +24,13 @@ namespace Goals.Domain.AggregatesModel.GoalsAggregate
         private List<GoalStep> _steps;
         public IReadOnlyCollection<GoalStep> Steps => _steps;
 
+        private List<DiaryPost> _diaryPosts;
+        public IReadOnlyCollection<DiaryPost> DiaryPosts => _diaryPosts;
+
         protected Goal()
         {
             _steps = new List<GoalStep>();
+            _diaryPosts = new List<DiaryPost>();
             GoalStatus = GoalStatus.InProgress;
         }
 
@@ -44,7 +47,7 @@ namespace Goals.Domain.AggregatesModel.GoalsAggregate
             string description = null, DateTime? dateDue = null, byte[] image = null)
             : this(identityGuid, title, goalSettings)
         {
-            if(dateDue != null)
+            if (dateDue != null)
                 SetDateDue(dateDue.Value);
 
             Description = description;
@@ -77,6 +80,20 @@ namespace Goals.Domain.AggregatesModel.GoalsAggregate
         public void SetFailedStatus()
         {
             GoalStatus = GoalStatus.Failed;
+        }
+
+        public void AddStep(GoalStep step)
+        {
+            if (step == null)
+                throw new ArgumentNullException(nameof(step));
+
+            if (!_steps.Contains(step))
+                _steps.Add(step);
+        }
+
+        public void RemoveStep(GoalStep step)
+        {
+            _steps.Remove(step);
         }
 
         public void RemoveGoal()

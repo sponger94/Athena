@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Goals.Infrastructure.Migrations
+namespace Tasks.Infrastructure.Migrations
 {
     public partial class Initial : Migration
     {

@@ -1,11 +1,9 @@
-using Goals.Domain.AggregatesModel.GoalsAggregate;
 using System;
 using System.Linq;
-using Goals.Domain.Events;
-using Goals.Domain.Exceptions;
+using Goals.Domain.AggregatesModel.GoalsAggregate;
 using Xunit;
 
-namespace Goals.UnitTests.Domain
+namespace Tasks.UnitTests.Domain
 {
     public class GoalsAggregateTest
     {

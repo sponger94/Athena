@@ -5,27 +5,28 @@ using Goals.Domain.AggregatesModel.GoalsAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Goals.Infrastructure.EntitiesConfiguration
+namespace Tasks.Infrastructure.EntitiesConfiguration
 {
     public class GoalSettingsEntityTypeConfiguration
         : IEntityTypeConfiguration<GoalSettings>
     {
         public void Configure(EntityTypeBuilder<GoalSettings> settingsConfig)
         {
-            settingsConfig.Property<int>("_goalViewAccessibilityId")
-                .IsRequired();
+            //TODO: Check if necessary
+            //settingsConfig.Property<int>("GoalViewAccessibilityId")
+            //    .IsRequired();
 
-            settingsConfig.Property<int>("_goalCommentAccessibilityId")
-                .IsRequired();
+            //settingsConfig.Property<int>("GoalCommentAccessibilityId")
+            //    .IsRequired();
 
             settingsConfig.HasOne(s => s.GoalViewAccessibility)
                 .WithMany()
-                .HasForeignKey("_goalViewAccessibilityId")
+                .HasForeignKey("GoalViewAccessibilityId")
                 .IsRequired();
 
             settingsConfig.HasOne(s => s.GoalCommentAccessibility)
                 .WithMany()
-                .HasForeignKey("_goalCommentAccessibilityId")
+                .HasForeignKey("GoalCommentAccessibilityId")
                 .IsRequired();
         }
     }

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Goals.Infrastructure.EntitiesConfiguration
+namespace Tasks.Infrastructure.EntitiesConfiguration
 {
     public class GoalsEntityTypeConfiguration
         : IEntityTypeConfiguration<Goal>
@@ -35,7 +35,7 @@ namespace Goals.Infrastructure.EntitiesConfiguration
 
             goalConfig.OwnsMany(g => g.Steps, stepConfig =>
             {
-                stepConfig.HasForeignKey("GoalId");
+                stepConfig.HasForeignKey("DiaryPostId");
 
                 stepConfig.Property(s => s.Name)
                     .HasMaxLength(128)
@@ -47,11 +47,40 @@ namespace Goals.Infrastructure.EntitiesConfiguration
                 stepConfig.Property(s => s.DueDate)
                     .IsRequired(false);
 
-                stepConfig.HasKey("GoalId", "Name", "Description", "DueDate");
+                stepConfig.HasKey("DiaryPostId", "Name", "Description", "DueDate");
+            });
+            goalConfig.OwnsMany(g => g.DiaryPosts, postsConfig =>
+            {
+                postsConfig.ToTable("diary_posts", GoalsContext.DefaultSchema);
+
+                postsConfig.Property(p => p.IdentityGuid)
+                    .HasMaxLength(64)
+                    .IsRequired();
+
+                postsConfig.Property(p => p.DiaryPostId)
+                    .IsRequired();
+
+                postsConfig.Property(p => p.Content)
+                    .IsRequired();
+
+                postsConfig.OwnsMany(p => p.Comments, commentsConfig =>
+                {
+                    commentsConfig.ToTable("comments", GoalsContext.DefaultSchema);
+
+                    commentsConfig.HasKey(c => new { c.IdentityGuid, GoalId = c.DiaryPostId });
+
+                    commentsConfig.Property(c => c.PostedTime)
+                        .IsRequired();
+                });
+
+                postsConfig.HasKey(p => new { p.IdentityGuid, p.DiaryPostId, p.Content });
             });
 
-            var navigation = goalConfig.Metadata.FindNavigation(nameof(Goal.Steps));
-            navigation.SetPropertyAccessMode(PropertyAccessMode.Field);
+            var stepsNavigation = goalConfig.Metadata.FindNavigation(nameof(Goal.Steps));
+            stepsNavigation.SetPropertyAccessMode(PropertyAccessMode.Field);
+
+            var postsNavigation = goalConfig.Metadata.FindNavigation(nameof(Goal.DiaryPosts));
+            postsNavigation.SetPropertyAccessMode(PropertyAccessMode.Field);
         }
     }
 }

@@ -1,10 +1,10 @@
-﻿using Goals.Domain.AggregatesModel.GoalsAggregate;
-using Goals.Domain.SeedWork;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
+using Goals.Domain.AggregatesModel.GoalsAggregate;
+using Goals.Domain.SeedWork;
 
-namespace Goals.Infrastructure.Repositories
+namespace Tasks.Infrastructure.Repositories
 {
     public class GoalsRepository
         : IGoalRepository

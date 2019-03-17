@@ -1,8 +1,7 @@
-﻿using Goals.Domain.SeedWork;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Goals.Domain.Exceptions;
+using Goals.Domain.SeedWork;
 
 namespace Goals.Domain.AggregatesModel.GoalsAggregate
 {
