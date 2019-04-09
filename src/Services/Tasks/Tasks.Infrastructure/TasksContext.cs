@@ -21,7 +21,7 @@ namespace Tasks.Infrastructure
         public DbSet<Label> Labels { get; set; }
         public DbSet<Note> Notes { get; set; }
         public DbSet<SubTask> SubTasks { get; set; }
-        public DbSet<UserTask> Tasks { get; set; }
+        public DbSet<UserTask> UserTasks { get; set; }
 
         private readonly IMediator _mediator;
         public IDbContextTransaction CurrentTransaction { get; private set; }
