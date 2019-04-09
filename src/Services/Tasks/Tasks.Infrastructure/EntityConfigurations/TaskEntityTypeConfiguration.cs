@@ -1,13 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Task = Tasks.Domain.AggregatesModel.TasksAggregate.Task;
+using UserTask = Tasks.Domain.AggregatesModel.UserTasksAggregate.UserTask;
 
 namespace Tasks.Infrastructure.EntityConfigurations
 {
     public class TaskEntityTypeConfiguration
-        : IEntityTypeConfiguration<Task>
+        : IEntityTypeConfiguration<UserTask>
     {
-        public void Configure(EntityTypeBuilder<Task> taskConfig)
+        public void Configure(EntityTypeBuilder<UserTask> taskConfig)
         {
             taskConfig.ToTable("tasks", TasksContext.DefaultSchema);
 

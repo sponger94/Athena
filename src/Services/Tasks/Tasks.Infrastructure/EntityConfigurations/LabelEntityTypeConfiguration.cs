@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Tasks.Domain.AggregatesModel.TasksAggregate;
+using Tasks.Domain.AggregatesModel.UserTasksAggregate;
 
 namespace Tasks.Infrastructure.EntityConfigurations
 {

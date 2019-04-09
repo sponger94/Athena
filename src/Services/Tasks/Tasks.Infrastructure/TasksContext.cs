@@ -4,10 +4,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Tasks.Domain.AggregatesModel.ProjectsAggregate;
-using Tasks.Domain.AggregatesModel.TasksAggregate;
 using Tasks.Domain.SeedWork;
-using Task = Tasks.Domain.AggregatesModel.TasksAggregate.Task;
+using UserTask = Tasks.Domain.AggregatesModel.UserTasksAggregate.UserTask;
 using Microsoft.EntityFrameworkCore.Storage;
+using Tasks.Domain.AggregatesModel.UserTasksAggregate;
 
 namespace Tasks.Infrastructure
 {
@@ -21,7 +21,7 @@ namespace Tasks.Infrastructure
         public DbSet<Label> Labels { get; set; }
         public DbSet<Note> Notes { get; set; }
         public DbSet<SubTask> SubTasks { get; set; }
-        public DbSet<Task> Tasks { get; set; }
+        public DbSet<UserTask> Tasks { get; set; }
 
         private readonly IMediator _mediator;
         public IDbContextTransaction CurrentTransaction { get; private set; }

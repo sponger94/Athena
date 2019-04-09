@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using Tasks.Domain.SeedWork;
 
-namespace Tasks.Domain.AggregatesModel.TasksAggregate
+namespace Tasks.Domain.AggregatesModel.UserTasksAggregate
 {
     public class SubTask : ValueObject
     {

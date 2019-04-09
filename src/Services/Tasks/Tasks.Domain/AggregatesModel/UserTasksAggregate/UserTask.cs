@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using Tasks.Domain.SeedWork;
 
-namespace Tasks.Domain.AggregatesModel.TasksAggregate
+namespace Tasks.Domain.AggregatesModel.UserTasksAggregate
 {
-    public class Task : Entity, IAggregateRoot
+    public class UserTask : Entity, IAggregateRoot
     {
         public DateTime DateCreated { get; private set; }
 
@@ -17,8 +17,8 @@ namespace Tasks.Domain.AggregatesModel.TasksAggregate
         private List<Attachment> _attachments;
         public IReadOnlyCollection<Attachment> Attachments => _attachments;
 
-        private List<TaskLabelItem> _labelItems;
-        public IReadOnlyCollection<TaskLabelItem> LabelItems => _labelItems;
+        private List<UserTaskLabelItem> _labelItems;
+        public IReadOnlyCollection<UserTaskLabelItem> LabelItems => _labelItems;
 
         private List<Note> _notes;
         public IReadOnlyCollection<Note> Notes => _notes;
@@ -26,21 +26,21 @@ namespace Tasks.Domain.AggregatesModel.TasksAggregate
         private List<SubTask> _subTasks;
         public IReadOnlyCollection<SubTask> SubTasks => _subTasks;
 
-        private Task()
+        private UserTask()
         {
             _attachments = new List<Attachment>();
-            _labelItems = new List<TaskLabelItem>();
+            _labelItems = new List<UserTaskLabelItem>();
             _notes = new List<Note>();
             _subTasks = new List<SubTask>();
         }
 
-        public Task(string name)
+        public UserTask(string name)
             : this()
         {
             Name = name;
         }
 
-        public Task(string name, int projectId)
+        public UserTask(string name, int projectId)
             : this(name)
         {
             ProjectId = projectId;

@@ -1,20 +1,20 @@
 ﻿using System.Collections.Generic;
 using Tasks.Domain.SeedWork;
 
-namespace Tasks.Domain.AggregatesModel.TasksAggregate
+namespace Tasks.Domain.AggregatesModel.UserTasksAggregate
 {
-    public class TaskLabelItem
+    public class UserTaskLabelItem
         : ValueObject
     {
         public int LabelId { get; private set; }
 
         public Label Label { get; private set; }
 
-        private TaskLabelItem()
+        private UserTaskLabelItem()
         {
         }
 
-        public TaskLabelItem(int labelId)
+        public UserTaskLabelItem(int labelId)
         {
             LabelId = labelId;
         }
