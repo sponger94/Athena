@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Drawing;
 using Tasks.Domain.Exceptions;
 using Tasks.Domain.SeedWork;
@@ -11,6 +12,9 @@ namespace Tasks.Domain.AggregatesModel.ProjectsAggregate
 
         public string Name { get; private set; }
 
+        public int Argb { get; private set; }
+
+        [NotMapped]
         public Color Color { get; private set; }
 
         private Project()
@@ -40,6 +44,7 @@ namespace Tasks.Domain.AggregatesModel.ProjectsAggregate
         public void SetColor(Color color)
         {
             Color = color;
+            Argb = color.ToArgb();
         }
     }
 }

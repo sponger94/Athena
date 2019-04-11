@@ -18,8 +18,10 @@ namespace Tasks.Infrastructure.EntityConfigurations
             labelConfig.Property(l => l.Id)
                 .ForSqlServerUseSequenceHiLo("labelseq", TasksContext.DefaultSchema);
 
-            labelConfig.Property(l => l.Color)
+            labelConfig.Property(l => l.Argb)
                 .IsRequired();
+
+            labelConfig.Ignore(l => l.Color);
 
             labelConfig.Property(l => l.Name)
                 .HasMaxLength(32)

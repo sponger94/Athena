@@ -9,7 +9,7 @@ namespace Tasks.Infrastructure.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<UserTask> taskConfig)
         {
-            taskConfig.ToTable("tasks", TasksContext.DefaultSchema);
+            taskConfig.ToTable("userTasks", TasksContext.DefaultSchema);
 
             taskConfig.HasKey(t => t.Id);
 
@@ -33,17 +33,21 @@ namespace Tasks.Infrastructure.EntityConfigurations
 
             taskConfig.OwnsMany(t => t.Attachments, attachmentConfig =>
             {
-                attachmentConfig.HasForeignKey("TaskId");
+                attachmentConfig.ToTable("attachments", TasksContext.DefaultSchema);
+
+                attachmentConfig.HasForeignKey("UserTaskId");
 
                 attachmentConfig.Property(a => a.Uri)
                     .IsRequired();
 
-                attachmentConfig.HasKey("TaskId", "Uri");
+                attachmentConfig.HasKey("UserTaskId", "Uri");
             });
 
             taskConfig.OwnsMany(t => t.LabelItems, labelItemConfig =>
             {
-                labelItemConfig.HasForeignKey("TaskId");
+                labelItemConfig.ToTable("labelItems", TasksContext.DefaultSchema);
+
+                labelItemConfig.HasForeignKey("UserTaskId");
 
                 labelItemConfig.Property(li => li.LabelId)
                     .IsRequired();
@@ -53,22 +57,26 @@ namespace Tasks.Infrastructure.EntityConfigurations
                     .HasForeignKey(li => li.LabelId)
                     .OnDelete(DeleteBehavior.Cascade);
 
-                labelItemConfig.HasKey("TaskId", "LabelId");
+                labelItemConfig.HasKey("UserTaskId", "LabelId");
             });
             
             taskConfig.OwnsMany(t => t.Notes, noteConfig =>
             {
-                noteConfig.HasForeignKey("TaskId");
+                noteConfig.ToTable("notes", TasksContext.DefaultSchema);
+
+                noteConfig.HasForeignKey("UserTaskId");
 
                 noteConfig.Property(a => a.Content)
                     .IsRequired();
 
-                noteConfig.HasKey("TaskId", "Content");
+                noteConfig.HasKey("UserTaskId", "Content");
             });
             
             taskConfig.OwnsMany(t => t.SubTasks, subTaskConfig =>
             {
-                subTaskConfig.HasForeignKey("TaskId");
+                subTaskConfig.ToTable("subTasks", TasksContext.DefaultSchema);
+
+                subTaskConfig.HasForeignKey("UserTaskId");
 
                 subTaskConfig.Property(a => a.Name)
                     .IsRequired();
@@ -76,7 +84,7 @@ namespace Tasks.Infrastructure.EntityConfigurations
                 subTaskConfig.Property(a => a.IsCompleted)
                     .IsRequired();
 
-                subTaskConfig.HasKey("TaskId", "Name", "IsCompleted");
+                subTaskConfig.HasKey("UserTaskId", "Name", "IsCompleted");
             });
         }
     }
