@@ -8,7 +8,7 @@ namespace Tasks.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class HomeController : ControllerBase
     {
         // GET api/values
         [HttpGet]

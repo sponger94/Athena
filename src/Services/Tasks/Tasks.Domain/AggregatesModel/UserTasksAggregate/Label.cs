@@ -16,10 +16,10 @@ namespace Tasks.Domain.AggregatesModel.UserTasksAggregate
         private Label()
         { }
 
-        public Label(Color color, string name)
+        public Label(string name, Color color)
         {
-            Color = color;
             Name = name;
+            SetColor(color);
         }
 
         public void SetColor(Color color)

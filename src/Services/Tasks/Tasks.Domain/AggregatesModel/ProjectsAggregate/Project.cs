@@ -31,7 +31,7 @@ namespace Tasks.Domain.AggregatesModel.ProjectsAggregate
         public Project(string identityGuid, string name, Color color)
             : this(identityGuid, name)
         {
-            Color = color;
+            SetColor(color);
         }
 
         public void SetName(string name)

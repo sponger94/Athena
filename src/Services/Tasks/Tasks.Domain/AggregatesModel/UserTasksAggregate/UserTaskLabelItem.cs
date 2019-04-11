@@ -11,8 +11,7 @@ namespace Tasks.Domain.AggregatesModel.UserTasksAggregate
         public Label Label { get; private set; }
 
         private UserTaskLabelItem()
-        {
-        }
+        { }
 
         public UserTaskLabelItem(int labelId)
         {
