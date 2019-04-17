@@ -18,7 +18,7 @@ namespace Tasks.Domain.AggregatesModel.UserTasksAggregate
                 : throw new ArgumentNullException(nameof(uri));
         }
 
-        protected override IEnumerable<object> GetAtomicValues()
+        public override IEnumerable<object> GetAtomicValues()
         {
             yield return Uri;
         }

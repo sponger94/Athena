@@ -23,7 +23,7 @@ namespace Tasks.Domain.AggregatesModel.UserTasksAggregate
         //    IsCompleted = true;
         //}
 
-        protected override IEnumerable<object> GetAtomicValues()
+        public override IEnumerable<object> GetAtomicValues()
         {
             yield return Name;
             yield return IsCompleted;

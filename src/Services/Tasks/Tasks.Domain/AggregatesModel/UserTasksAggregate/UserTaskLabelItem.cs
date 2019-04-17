@@ -18,7 +18,7 @@ namespace Tasks.Domain.AggregatesModel.UserTasksAggregate
             LabelId = labelId;
         }
 
-        protected override IEnumerable<object> GetAtomicValues()
+        public override IEnumerable<object> GetAtomicValues()
         {
             yield return LabelId;
         }

@@ -15,7 +15,7 @@ namespace Tasks.Domain.AggregatesModel.UserTasksAggregate
             Content = content;
         }
 
-        protected override IEnumerable<object> GetAtomicValues()
+        public override IEnumerable<object> GetAtomicValues()
         {
             yield return Content;
         }

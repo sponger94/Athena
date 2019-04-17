@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Tasks.Domain.SeedWork
 {
-    public abstract class ValueObject
+    public abstract class ValueObject : IAtomicValuesGettable
     {
         protected static bool EqualOperator(ValueObject left, ValueObject right)
         {
@@ -19,36 +19,16 @@ namespace Tasks.Domain.SeedWork
             return !(EqualOperator(left, right));
         }
 
-        protected abstract IEnumerable<object> GetAtomicValues();
+        public abstract IEnumerable<object> GetAtomicValues();
 
         public override bool Equals(object obj)
         {
-            if (obj == null || obj.GetType() != GetType())
-            {
-                return false;
-            }
-            ValueObject other = (ValueObject)obj;
-            IEnumerator<object> thisValues = GetAtomicValues().GetEnumerator();
-            IEnumerator<object> otherValues = other.GetAtomicValues().GetEnumerator();
-            while (thisValues.MoveNext() && otherValues.MoveNext())
-            {
-                if (ReferenceEquals(thisValues.Current, null) ^ ReferenceEquals(otherValues.Current, null))
-                {
-                    return false;
-                }
-                if (thisValues.Current != null && !thisValues.Current.Equals(otherValues.Current))
-                {
-                    return false;
-                }
-            }
-            return !thisValues.MoveNext() && !otherValues.MoveNext();
+            return new ValueObjectEqualityComparer().Equals(this, obj as IAtomicValuesGettable);
         }
 
         public override int GetHashCode()
         {
-            return GetAtomicValues()
-                .Select(x => x != null ? x.GetHashCode() : 0)
-                .Aggregate((x, y) => x ^ y);
+            return new ValueObjectEqualityComparer().GetHashCode(this);
         }
 
         public ValueObject GetCopy()
