@@ -2,9 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Threading.Tasks;
-using Tasks.Domain.SeedWork;
 
 namespace Tasks.API.Application.Queries
 {
@@ -12,56 +10,81 @@ namespace Tasks.API.Application.Queries
         : IUserTaskQueries
     {
         private readonly string _connectionString;
-        
-        private const string GetTaskByIdSqlQuery = @"SELECT 
-                            t.[Id] AS tasknumber,
-                            t.[DateCreated] AS datecreated,
-                            t.[Name] AS taskname,
-                            t.[IsCompleted] AS iscompleted,
-                            ats.[Uri] AS uri,
-                            ats.[UserTaskId] as usertaskid,
-                            l.[Id] AS labelid,
-                            l.[Argb] AS argb,
-                            l.[Name] AS labelname,
-                            n.[Content] AS content,
-                            n.[UserTaskId] AS usertaskid,
-                            st.[Name] AS subtaskname,
-                            st.[IsCompleted] AS iscompleted,
-                            st.[UserTaskId] AS usertaskid
-                        FROM [tasks].[userTasks] AS t
-                        LEFT JOIN [tasks].[attachments] AS ats ON t.[Id] = ats.[UserTaskId]
-                        LEFT JOIN [tasks].[labelItems] AS li ON t.[Id] = li.[UserTaskId]
-                        LEFT JOIN [tasks].[labels] AS l ON li.[LabelId] = l.[Id]
-                        LEFT JOIN [tasks].[notes] AS n ON t.[Id] = n.[UserTaskId]
-                        LEFT JOIN [tasks].[subTasks] AS st ON t.[Id] = st.[UserTaskId]
-                        WHERE t.Id=@id";
 
-        private const string GetTasksForUserSqlQuery = @"SELECT 
+        private const string GetTaskByIdSqlQuery = @"
+                        SELECT TOP(1)
                             t.[Id] AS tasknumber,
                             t.[DateCreated] AS datecreated,
                             t.[Name] AS taskname,
-                            t.[IsCompleted] AS iscompleted,
-                            ats.[Uri] AS uri,
-                            ats.[UserTaskId] as usertaskid,
+                            t.[IsCompleted] AS iscompleted
+                        FROM [tasks].[userTasks] AS t
+                        WHERE t.[Id] = @id;
+
+                        SELECT
+                            ats.[Uri] AS uri
+                        FROM [tasks].[attachments] AS ats
+                        WHERE ats.[UserTaskId] = @id;
+
+                        SELECT
                             l.[Id] AS labelid,
                             l.[Argb] AS argb,
-                            l.[Name] AS labelname,
-                            n.[Content] AS content,
-                            n.[UserTaskId] AS usertaskid,
+                            l.[Name] AS labelname
+                        FROM [tasks].[labels] AS l
+                        INNER JOIN [tasks].[labelItems] AS li ON l.[Id] = li.[LabelId]
+                        WHERE li.[UserTaskId] = @id;
+
+                        SELECT
+                            n.[Content]
+                        FROM [tasks].[notes] AS n
+                        WHERE n.[UserTaskId] = @id;
+
+                        SELECT
                             st.[Name] AS subtaskname,
-                            st.[IsCompleted] AS iscompleted,
-                            st.[UserTaskId] AS usertaskid
+                            st.[IsCompleted] AS iscompleted
+                        FROM [tasks].[subTasks] AS st
+                        WHERE st.[UserTaskId] = @id";
+
+        private const string GetTasksForUserSqlQuery = @"
+                        SELECT
+                            t.[Id] AS tasknumber,
+                            t.[DateCreated] AS datecreated,
+                            t.[Name] AS taskname,
+                            t.[IsCompleted] AS iscompleted
                         FROM [tasks].[userTasks] AS t
-                        LEFT JOIN [tasks].[attachments] AS ats ON t.[Id] = ats.[UserTaskId]
-                        LEFT JOIN [tasks].[labelItems] AS li ON t.[Id] = li.[UserTaskId]
-                        LEFT JOIN [tasks].[labels] AS l ON li.[LabelId] = l.[Id]
-                        LEFT JOIN [tasks].[notes] AS n ON t.[Id] = n.[UserTaskId]
-						LEFT JOIN [tasks].[projects] AS p ON t.[ProjectId] = p.[Id]
-                        LEFT JOIN [tasks].[subTasks] AS st ON t.[Id] = st.[UserTaskId]
-						WHERE p.[IdentityGuid] = @userId
-                        ORDER BY t.[Name]
-                        OFFSET @offset ROWS
-                        FETCH NEXT @pageSize ROWS ONLY";
+                        INNER JOIN [tasks].[projects] AS p ON t.[ProjectId] = p.[Id]
+                        WHERE p.[IdentityGuid] = @userId;
+
+                        SELECT
+                            ats.[Uri] AS uri
+                        FROM [tasks].[attachments] AS ats
+                        INNER JOIN [tasks].[userTasks] AS t ON ats.[UserTaskId] = t.[Id]
+                        INNER JOIN [tasks].[projects] AS p ON t.[ProjectId] = p.[Id]
+                        WHERE p.[IdentityGuid] = @userId;
+
+                        SELECT
+                            l.[Id] AS labelid,
+                            l.[Argb] AS argb,
+                            l.[Name] AS labelname
+                        FROM [tasks].[labels] AS l
+                        INNER JOIN [tasks].[labelItems] AS li ON l.[Id] = li.[LabelId]
+                        INNER JOIN [tasks].[userTasks] AS t ON li.[UserTaskId] = t.[Id]
+                        INNER JOIN [tasks].[projects] AS p ON t.[ProjectId] = p.[Id]
+                        WHERE p.[IdentityGuid] = @userId;
+
+                        SELECT
+                            n.[Content]
+                        FROM [tasks].[notes] AS n
+                        INNER JOIN [tasks].[userTasks] AS t ON n.[UserTaskId] = t.[Id]
+                        INNER JOIN [tasks].[projects] AS p ON t.[ProjectId] = p.[Id]
+                        WHERE p.[IdentityGuid] = @userId;
+
+                        SELECT
+                            st.[Name] AS subtaskname,
+                            st.[IsCompleted] AS iscompleted
+                        FROM [tasks].[subTasks] AS st
+                        INNER JOIN [tasks].[userTasks] AS t ON st.[UserTaskId] = t.[Id]
+                        INNER JOIN [tasks].[projects] AS p ON t.[ProjectId] = p.[Id]
+                        WHERE p.[IdentityGuid] = @userId";
 
         public UserTaskQueries(string connString)
         {
@@ -76,62 +99,15 @@ namespace Tasks.API.Application.Queries
             {
                 connection.Open();
 
-                var userTasksDictionary = new Dictionary<int, UserTask>();
-                var attachments = new List<Attachment>();
-                var labels = new List<int>();
-                var notes = new List<Note>();
-                var subTasks = new List<SubTask>();
+                var multiResult = await connection.QueryMultipleAsync(GetTaskByIdSqlQuery, new { id });
 
-                var result = await connection.QueryAsync<UserTask, Attachment, Label, Note, SubTask, UserTask>(
-                    GetTaskByIdSqlQuery,
-                    (task, attachment, label, note, subTask) =>
-                    {
-                        UserTask taskEntry;
+                var taskEntry = await multiResult.ReadSingleAsync<UserTask>();
+                taskEntry.attachments.AddRange(await multiResult.ReadAsync<Attachment>());
+                taskEntry.labels.AddRange(await multiResult.ReadAsync<Label>());
+                taskEntry.notes.AddRange(await multiResult.ReadAsync<Note>());
+                taskEntry.subtasks.AddRange(await multiResult.ReadAsync<SubTask>());
 
-                        if (!userTasksDictionary.TryGetValue(task.tasknumber, out taskEntry))
-                        {
-                            taskEntry = task;
-                            taskEntry.attachments = new List<Attachment>();
-                            taskEntry.labels = new List<Label>();
-                            taskEntry.notes = new List<Note>();
-                            taskEntry.subtasks = new List<SubTask>();
-                            userTasksDictionary.Add(taskEntry.tasknumber, taskEntry);
-                        }
-
-                        if (!attachments.Contains(attachment, new ValueObjectEqualityComparer()))
-                        {
-                            attachments.Add(attachment);
-                            taskEntry.attachments.Add(attachment);
-                        }
-
-                        if (!labels.Contains(label.labelid))
-                        {
-                            labels.Add(label.labelid);
-                            taskEntry.labels.Add(label);
-                        }
-
-                        if (!notes.Contains(note, new ValueObjectEqualityComparer()))
-                        {
-                            notes.Add(note);
-                            taskEntry.notes.Add(note);
-                        }
-
-                        if (!subTasks.Contains(subTask, new ValueObjectEqualityComparer()))
-                        {
-                            subTasks.Add(subTask);
-                            taskEntry.subtasks.Add(subTask);
-                        }
-
-                        return taskEntry;
-                    },
-                    new { id },
-                    splitOn: "uri,labelid,content,subtaskname");
-
-                var userTasks = result.ToList();
-                if (userTasks.AsList().Count == 0)
-                    throw new KeyNotFoundException();
-
-                return userTasks.First();
+                return taskEntry;
             }
         }
 
@@ -141,63 +117,15 @@ namespace Tasks.API.Application.Queries
             {
                 connection.Open();
 
-                var userTasksDictionary = new Dictionary<int, UserTask>();
-                var attachments = new List<Attachment>();
-                var labels = new List<int>();
-                var notes = new List<Note>();
-                var subTasks = new List<SubTask>();
-                var offset = pageIndex * pageSize;
+                var multiResult = await connection.QueryMultipleAsync(GetTaskByIdSqlQuery, new { userId });
 
-                var result = await connection.QueryAsync<UserTask, Attachment, Label, Note, SubTask, UserTask>(
-                    GetTasksForUserSqlQuery,
-                    (task, attachment, label, note, subTask) =>
-                    {
-                        UserTask taskEntry;
+                var tasks = await multiResult.ReadAsync<Task>();
+                taskEntry.attachments.AddRange(await multiResult.ReadAsync<Attachment>());
+                taskEntry.labels.AddRange(await multiResult.ReadAsync<Label>());
+                taskEntry.notes.AddRange(await multiResult.ReadAsync<Note>());
+                taskEntry.subtasks.AddRange(await multiResult.ReadAsync<SubTask>());
 
-                        if (!userTasksDictionary.TryGetValue(task.tasknumber, out taskEntry))
-                        {
-                            taskEntry = task;
-                            taskEntry.attachments = new List<Attachment>();
-                            taskEntry.labels = new List<Label>();
-                            taskEntry.notes = new List<Note>();
-                            taskEntry.subtasks = new List<SubTask>();
-                            userTasksDictionary.Add(taskEntry.tasknumber, taskEntry);
-                        }
-
-                        if (!attachments.Contains(attachment, new ValueObjectEqualityComparer()))
-                        {
-                            attachments.Add(attachment);
-                            taskEntry.attachments.Add(attachment);
-                        }
-
-                        if (!labels.Contains(label.labelid))
-                        {
-                            labels.Add(label.labelid);
-                            taskEntry.labels.Add(label);
-                        }
-
-                        if (!notes.Contains(note, new ValueObjectEqualityComparer()))
-                        {
-                            notes.Add(note);
-                            taskEntry.notes.Add(note);
-                        }
-
-                        if (!subTasks.Contains(subTask, new ValueObjectEqualityComparer()))
-                        {
-                            subTasks.Add(subTask);
-                            taskEntry.subtasks.Add(subTask);
-                        }
-
-                        return taskEntry;
-                    },
-                    new { userId, offset, pageSize },
-                    splitOn: "uri,labelid,content,subtaskname");
-
-                var userTasks = result.ToList();
-                if (userTasks.AsList().Count == 0)
-                    throw new KeyNotFoundException();
-
-                return userTasks;
+                return taskEntry;
             }
         }
     }

@@ -63,5 +63,13 @@ namespace Tasks.API.Application.Queries
         public List<Label> labels { get; set; }
         public List<Note> notes { get; set; }
         public List<SubTask> subtasks { get; set; }
+
+        public UserTask()
+        {
+            attachments = new List<Attachment>();
+            labels = new List<Label>();
+            notes = new List<Note>();
+            subtasks = new List<SubTask>();
+        }
     }
 }
