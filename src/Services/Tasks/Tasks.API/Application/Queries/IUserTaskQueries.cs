@@ -8,7 +8,7 @@ namespace Tasks.API.Application.Queries
 {
     public interface IUserTaskQueries
     {
-        Task<UserTask> GetTaskAsync(int id);
+        Task<UserTask> GetTaskAsync(int userTaskId);
 
         Task<IEnumerable<UserTaskSummary>> GetTasksFromUserAsync(Guid userId, int pageSize, int pageIndex);
     }

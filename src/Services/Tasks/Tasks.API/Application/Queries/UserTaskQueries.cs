@@ -18,12 +18,12 @@ namespace Tasks.API.Application.Queries
                             t.[Name] AS taskname,
                             t.[IsCompleted] AS iscompleted
                         FROM [tasks].[userTasks] AS t
-                        WHERE t.[Id] = @id;
+                        WHERE t.[Id] = @userTaskId;
 
                         SELECT
                             ats.[Uri] AS uri
                         FROM [tasks].[attachments] AS ats
-                        WHERE ats.[UserTaskId] = @id;
+                        WHERE ats.[UserTaskId] = @userTaskId;
 
                         SELECT
                             l.[Id] AS labelid,
@@ -31,18 +31,18 @@ namespace Tasks.API.Application.Queries
                             l.[Name] AS labelname
                         FROM [tasks].[labels] AS l
                         INNER JOIN [tasks].[labelItems] AS li ON l.[Id] = li.[LabelId]
-                        WHERE li.[UserTaskId] = @id;
+                        WHERE li.[UserTaskId] = @userTaskId;
 
                         SELECT
                             n.[Content]
                         FROM [tasks].[notes] AS n
-                        WHERE n.[UserTaskId] = @id;
+                        WHERE n.[UserTaskId] = @userTaskId;
 
                         SELECT
                             st.[Name] AS subtaskname,
                             st.[IsCompleted] AS iscompleted
                         FROM [tasks].[subTasks] AS st
-                        WHERE st.[UserTaskId] = @id";
+                        WHERE st.[UserTaskId] = @userTaskId";
 
         private const string GetTasksForUserSqlQuery = @"
                         SELECT
@@ -64,13 +64,13 @@ namespace Tasks.API.Application.Queries
                 : throw new ArgumentNullException(nameof(connString));
         }
 
-        public async Task<UserTask> GetTaskAsync(int id)
+        public async Task<UserTask> GetTaskAsync(int userTaskId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
 
-                var multiResult = await connection.QueryMultipleAsync(GetTaskByIdSqlQuery, new { id });
+                var multiResult = await connection.QueryMultipleAsync(GetTaskByIdSqlQuery, new { id = userTaskId });
 
                 var taskEntry = await multiResult.ReadSingleAsync<UserTask>();
                 taskEntry.attachments.AddRange(await multiResult.ReadAsync<Attachment>());
