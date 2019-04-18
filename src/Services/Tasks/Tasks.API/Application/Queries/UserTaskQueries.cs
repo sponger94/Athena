@@ -52,39 +52,10 @@ namespace Tasks.API.Application.Queries
                             t.[IsCompleted] AS iscompleted
                         FROM [tasks].[userTasks] AS t
                         INNER JOIN [tasks].[projects] AS p ON t.[ProjectId] = p.[Id]
-                        WHERE p.[IdentityGuid] = @userId;
-
-                        SELECT
-                            ats.[Uri] AS uri
-                        FROM [tasks].[attachments] AS ats
-                        INNER JOIN [tasks].[userTasks] AS t ON ats.[UserTaskId] = t.[Id]
-                        INNER JOIN [tasks].[projects] AS p ON t.[ProjectId] = p.[Id]
-                        WHERE p.[IdentityGuid] = @userId;
-
-                        SELECT
-                            l.[Id] AS labelid,
-                            l.[Argb] AS argb,
-                            l.[Name] AS labelname
-                        FROM [tasks].[labels] AS l
-                        INNER JOIN [tasks].[labelItems] AS li ON l.[Id] = li.[LabelId]
-                        INNER JOIN [tasks].[userTasks] AS t ON li.[UserTaskId] = t.[Id]
-                        INNER JOIN [tasks].[projects] AS p ON t.[ProjectId] = p.[Id]
-                        WHERE p.[IdentityGuid] = @userId;
-
-                        SELECT
-                            n.[Content]
-                        FROM [tasks].[notes] AS n
-                        INNER JOIN [tasks].[userTasks] AS t ON n.[UserTaskId] = t.[Id]
-                        INNER JOIN [tasks].[projects] AS p ON t.[ProjectId] = p.[Id]
-                        WHERE p.[IdentityGuid] = @userId;
-
-                        SELECT
-                            st.[Name] AS subtaskname,
-                            st.[IsCompleted] AS iscompleted
-                        FROM [tasks].[subTasks] AS st
-                        INNER JOIN [tasks].[userTasks] AS t ON st.[UserTaskId] = t.[Id]
-                        INNER JOIN [tasks].[projects] AS p ON t.[ProjectId] = p.[Id]
-                        WHERE p.[IdentityGuid] = @userId";
+                        WHERE p.[IdentityGuid] = @userId
+                        ORDER BY t.[DateCreated]
+                        OFFSET @offset ROWS
+                        FETCH NEXT @pageSize ROWS ONLY";
 
         public UserTaskQueries(string connString)
         {
@@ -111,21 +82,17 @@ namespace Tasks.API.Application.Queries
             }
         }
 
-        public async Task<IEnumerable<UserTask>> GetTasksFromUserAsync(Guid userId, int pageSize, int pageIndex)
+        public async Task<IEnumerable<UserTaskSummary>> GetTasksFromUserAsync(Guid userId, int pageSize, int pageIndex)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
 
-                var multiResult = await connection.QueryMultipleAsync(GetTaskByIdSqlQuery, new { userId });
+                var offset = pageSize * pageIndex;
+                var multiResult = await connection.QueryMultipleAsync(GetTasksForUserSqlQuery, 
+                    new { userId, offset, pageSize });
 
-                var tasks = await multiResult.ReadAsync<Task>();
-                taskEntry.attachments.AddRange(await multiResult.ReadAsync<Attachment>());
-                taskEntry.labels.AddRange(await multiResult.ReadAsync<Label>());
-                taskEntry.notes.AddRange(await multiResult.ReadAsync<Note>());
-                taskEntry.subtasks.AddRange(await multiResult.ReadAsync<SubTask>());
-
-                return taskEntry;
+                return await multiResult.ReadAsync<UserTaskSummary>();
             }
         }
     }

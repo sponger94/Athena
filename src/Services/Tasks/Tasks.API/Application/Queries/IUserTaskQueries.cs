@@ -10,6 +10,6 @@ namespace Tasks.API.Application.Queries
     {
         Task<UserTask> GetTaskAsync(int id);
 
-        Task<IEnumerable<UserTask>> GetTasksFromUserAsync(Guid userId, int pageSize, int pageIndex);
+        Task<IEnumerable<UserTaskSummary>> GetTasksFromUserAsync(Guid userId, int pageSize, int pageIndex);
     }
 }

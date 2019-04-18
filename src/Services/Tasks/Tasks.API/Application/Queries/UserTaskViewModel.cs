@@ -72,4 +72,12 @@ namespace Tasks.API.Application.Queries
             subtasks = new List<SubTask>();
         }
     }
+
+    public class UserTaskSummary
+    {
+        public int tasknumber { get; set; }
+        public DateTime datecreated { get; set; }
+        public string taskname { get; set; }
+        public bool iscompleted { get; set; }
+    }
 }
