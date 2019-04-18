@@ -29,7 +29,7 @@ namespace Tasks.API.Controllers
         public async Task<ActionResult<IEnumerable<UserTask>>> GetTasksAsync()
         {
             var userId = _identityService.GetUserIdentity();
-            var userTasks = _taskQueries.GetTasksFromUserAsync(Guid.Parse(userId));
+            var userTasks = _taskQueries.GetTasksFromUserAsync(Guid.Parse(userId), 20, 0);
 
             return Ok(userTasks);
         }
