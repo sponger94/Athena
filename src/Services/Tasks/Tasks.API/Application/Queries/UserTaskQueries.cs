@@ -11,9 +11,10 @@ namespace Tasks.API.Application.Queries
     {
         private readonly string _connectionString;
 
-        private const string GetTaskByIdSqlQuery = @"
+        #region SqlQueries
+
+          private const string GetUserTaskByIdSqlQuery = @"
                         SELECT TOP(1)
-                            t.[Id] AS tasknumber,
                             t.[DateCreated] AS datecreated,
                             t.[Name] AS taskname,
                             t.[IsCompleted] AS iscompleted
@@ -44,9 +45,8 @@ namespace Tasks.API.Application.Queries
                         FROM [tasks].[subTasks] AS st
                         WHERE st.[UserTaskId] = @userTaskId";
 
-        private const string GetTasksForUserSqlQuery = @"
+        private const string GetUserTasksSqlQuery = @"
                         SELECT
-                            t.[Id] AS tasknumber,
                             t.[DateCreated] AS datecreated,
                             t.[Name] AS taskname,
                             t.[IsCompleted] AS iscompleted
@@ -57,6 +57,20 @@ namespace Tasks.API.Application.Queries
                         OFFSET @offset ROWS
                         FETCH NEXT @pageSize ROWS ONLY";
 
+        private const string GetProjectUserTasksSqlQuery = @"
+                        SELECT
+                            t.[DateCreated] AS datecreated,
+                            t.[Name] AS taskname,
+                            t.[IsCompleted] AS iscompleted
+                        FROM [tasks].[userTasks] AS t
+                        INNER JOIN [tasks].[projects] AS p ON t.[ProjectId] = p.[Id]
+                        WHERE p.[IdentityGuid] = @userId AND p.[Id] = @projectId
+                        ORDER BY t.[DateCreated]
+                        OFFSET @offset ROWS
+                        FETCH NEXT @pageSize ROWS ONLY";
+
+        #endregion
+      
         public UserTaskQueries(string connString)
         {
             _connectionString = !string.IsNullOrWhiteSpace(connString)
@@ -70,7 +84,7 @@ namespace Tasks.API.Application.Queries
             {
                 connection.Open();
 
-                var multiResult = await connection.QueryMultipleAsync(GetTaskByIdSqlQuery, new { id = userTaskId });
+                var multiResult = await connection.QueryMultipleAsync(GetUserTaskByIdSqlQuery, new { id = userTaskId });
 
                 var taskEntry = await multiResult.ReadSingleAsync<UserTask>();
                 taskEntry.attachments.AddRange(await multiResult.ReadAsync<Attachment>());
@@ -82,15 +96,29 @@ namespace Tasks.API.Application.Queries
             }
         }
 
-        public async Task<IEnumerable<UserTaskSummary>> GetTasksFromUserAsync(Guid userId, int pageSize, int pageIndex)
+        public async Task<IEnumerable<UserTaskSummary>> GetUserTasksAsync(Guid userId, int pageSize, int pageIndex)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
 
                 var offset = pageSize * pageIndex;
-                var multiResult = await connection.QueryMultipleAsync(GetTasksForUserSqlQuery, 
+                var multiResult = await connection.QueryMultipleAsync(GetUserTasksSqlQuery, 
                     new { userId, offset, pageSize });
+
+                return await multiResult.ReadAsync<UserTaskSummary>();
+            }
+        }
+
+        public async Task<IEnumerable<UserTaskSummary>> GetProjectUserTasksAsync(Guid userId, int projectId, int pageSize, int pageIndex)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                var offset = pageSize * pageIndex;
+                var multiResult = await connection.QueryMultipleAsync(GetProjectUserTasksSqlQuery, 
+                    new { userId, projectId, offset, pageSize });
 
                 return await multiResult.ReadAsync<UserTaskSummary>();
             }

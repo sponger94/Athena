@@ -1,10 +1,10 @@
-﻿using System;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Tasks.API.Application.Queries;
 using Tasks.API.Services;
 
@@ -26,8 +26,8 @@ namespace Tasks.API.Controllers
             _taskQueries = taskQueries ?? throw new ArgumentNullException(nameof(taskQueries));
         }
 
-        [Route("{userTaskId:int}")]
         [HttpGet]
+        [Route("{userTaskId:int}")]
         [ProducesResponseType(typeof(UserTask), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetUserTaskByIdAsync(int userTaskId)
@@ -43,14 +43,27 @@ namespace Tasks.API.Controllers
             }
         }
 
+        //GET api/v1/[controller][?pageSize=3&pageIndex=18]
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<UserTaskSummary>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<IEnumerable<UserTaskSummary>>> GetUserTasksAsync()
+        public async Task<ActionResult<IEnumerable<UserTaskSummary>>> GetUserTasksAsync([FromQuery]int pageSize = 20, [FromQuery]int pageIndex = 0)
         {
             var userId = _identityService.GetUserIdentity();
-            var userTasks = await _taskQueries.GetTasksFromUserAsync(Guid.Parse(userId), 20, 0);
+            var userTasks = await _taskQueries.GetUserTasksAsync(Guid.Parse(userId), 20, 0);
 
             return Ok(userTasks);
+        }
+
+        //GET api/v1/[controller]/projects/5[?pageSize=3&pageIndex=18]
+        [HttpGet]
+        [Route("projects/{projectId:int}")]
+        [ProducesResponseType(typeof(IEnumerable<UserTaskSummary>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<IEnumerable<UserTaskSummary>>> GetProjectUserTasksAsync(int projectId, [FromQuery]int pageSize = 20, [FromQuery]int pageIndex = 0)
+        {
+            var userId = _identityService.GetUserIdentity();
+            var projectUserTasks = await _taskQueries.GetProjectUserTasksAsync(Guid.Parse(userId), projectId, pageSize, pageIndex);
+
+            return Ok(projectUserTasks);
         }
     }
 }
