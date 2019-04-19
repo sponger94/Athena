@@ -54,11 +54,23 @@ namespace Tasks.API.Controllers
             return Ok(userTasks);
         }
 
+        //GET api/v1/[controller]/projects[?pageSize=3&pageIndex=18]
+        [HttpGet]
+        [Route("projects")]
+        [ProducesResponseType(typeof(IEnumerable<ProjectSummary>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetProjectsAsync([FromQuery] int pageSize = 20, [FromQuery] int pageIndex = 0)
+        {
+            var userId = _identityService.GetUserIdentity();
+            var projectUserTasks = await _taskQueries.GetProjectsAsync(Guid.Parse(userId), pageSize, pageIndex);
+
+            return Ok(projectUserTasks);
+        }
+
         //GET api/v1/[controller]/projects/5[?pageSize=3&pageIndex=18]
         [HttpGet]
         [Route("projects/{projectId:int}")]
         [ProducesResponseType(typeof(IEnumerable<UserTaskSummary>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<IEnumerable<UserTaskSummary>>> GetProjectUserTasksAsync(int projectId, [FromQuery]int pageSize = 20, [FromQuery]int pageIndex = 0)
+        public async Task<IActionResult> GetProjectUserTasksAsync(int projectId, [FromQuery]int pageSize = 20, [FromQuery]int pageIndex = 0)
         {
             var userId = _identityService.GetUserIdentity();
             var projectUserTasks = await _taskQueries.GetProjectUserTasksAsync(Guid.Parse(userId), projectId, pageSize, pageIndex);

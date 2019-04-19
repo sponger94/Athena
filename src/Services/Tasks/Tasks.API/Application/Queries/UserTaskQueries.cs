@@ -57,6 +57,16 @@ namespace Tasks.API.Application.Queries
                         OFFSET @offset ROWS
                         FETCH NEXT @pageSize ROWS ONLY";
 
+        private const string GetProjectsSqlQuery = @"
+                        SELECT
+                            p.[Argb] AS argb,
+                            p.[Name] AS name,
+                        FROM [tasks].[projects] AS p
+                        WHERE p.[IdentityGuid] = @userId
+                        ORDER BY p.[Name]
+                        OFFSET @offset ROWS
+                        FETCH NEXT @pageSize ROWS ONLY";
+
         private const string GetProjectUserTasksSqlQuery = @"
                         SELECT
                             t.[DateCreated] AS datecreated,
@@ -107,6 +117,20 @@ namespace Tasks.API.Application.Queries
                     new { userId, offset, pageSize });
 
                 return await multiResult.ReadAsync<UserTaskSummary>();
+            }
+        }
+
+        public async Task<IEnumerable<ProjectSummary>> GetProjectsAsync(Guid userId, int pageSize, int pageIndex)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                var offset = pageSize * pageIndex;
+                var multiResult = await connection.QueryMultipleAsync(GetProjectsSqlQuery, 
+                    new { userId, offset, pageSize });
+
+                return await multiResult.ReadAsync<ProjectSummary>();
             }
         }
 

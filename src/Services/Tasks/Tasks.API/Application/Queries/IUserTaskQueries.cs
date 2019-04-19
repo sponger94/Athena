@@ -12,6 +12,8 @@ namespace Tasks.API.Application.Queries
 
         Task<IEnumerable<UserTaskSummary>> GetUserTasksAsync(Guid userId, int pageSize, int pageIndex);
 
+        Task<IEnumerable<ProjectSummary>> GetProjectsAsync(Guid userId, int pageSize, int pageIndex);
+
         Task<IEnumerable<UserTaskSummary>> GetProjectUserTasksAsync(Guid userId, int projectId, int pageSize, int pageIndex);
     }
 }
