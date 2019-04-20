@@ -79,6 +79,7 @@ namespace Tasks.API.Controllers
             return Ok(projectUserTasks);
         }
 
+        //POST api/v1/[controller]/create
         [HttpPost]
         [Route("create")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
@@ -86,6 +87,90 @@ namespace Tasks.API.Controllers
         public async Task<IActionResult> CreateUserTask([FromBody] CreateUserTaskCommand createUserTaskCommand)
         {
             bool result = await _mediator.Send(createUserTaskCommand);
+
+            if (result)
+                return Ok();
+
+            return BadRequest();
+        }
+
+        //POST api/v1/[controller]
+        [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> AddAttachment([FromBody] AddAttachmentCommand addAttachmentCommand)
+        {
+            bool result = await _mediator.Send(addAttachmentCommand);
+
+            if (result)
+                return Ok();
+
+            return BadRequest();
+        }
+
+        //POST api/v1/[controller]
+        [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> RemoveAttachment([FromBody] RemoveAttachmentCommand removeAttachmentCommand)
+        {
+            bool result = await _mediator.Send(removeAttachmentCommand);
+
+            if (result)
+                return Ok();
+
+            return BadRequest();
+        }
+
+        //POST api/v1/[controller]
+        [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> AddNote([FromBody] AddNoteCommand addNoteCommand)
+        {
+            bool result = await _mediator.Send(addNoteCommand);
+
+            if (result)
+                return Ok();
+
+            return BadRequest();
+        }
+
+        //POST api/v1/[controller]
+        [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> RemoveNote([FromBody] RemoveNoteCommand removeNoteCommand)
+        {
+            bool result = await _mediator.Send(removeNoteCommand);
+
+            if (result)
+                return Ok();
+
+            return BadRequest();
+        }
+
+        //POST api/v1/[controller]
+        [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> AddSubTask([FromBody] AddSubTaskCommand addSubTaskCommand)
+        {
+            bool result = await _mediator.Send(addSubTaskCommand);
+
+            if (result)
+                return Ok();
+
+            return BadRequest();
+        }
+
+        //POST api/v1/[controller]
+        [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> RemoveSubTask([FromBody] RemoveSubTaskCommand removeSubTaskCommand)
+        {
+            bool result = await _mediator.Send(removeSubTaskCommand);
 
             if (result)
                 return Ok();

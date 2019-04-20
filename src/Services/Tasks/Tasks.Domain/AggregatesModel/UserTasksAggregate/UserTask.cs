@@ -32,6 +32,8 @@ namespace Tasks.Domain.AggregatesModel.UserTasksAggregate
             _labelItems = new List<UserTaskLabelItem>();
             _notes = new List<Note>();
             _subTasks = new List<SubTask>();
+
+            DateCreated = DateTime.Now;
         }
 
         public UserTask(string name)
