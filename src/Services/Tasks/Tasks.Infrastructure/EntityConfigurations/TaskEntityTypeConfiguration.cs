@@ -29,7 +29,8 @@ namespace Tasks.Infrastructure.EntityConfigurations
                 .IsRequired();
 
             taskConfig.Property(t => t.ProjectId)
-                .IsRequired(false);
+                .HasDefaultValue(1)
+                .IsRequired();
 
             taskConfig.OwnsMany(t => t.Attachments, attachmentConfig =>
             {

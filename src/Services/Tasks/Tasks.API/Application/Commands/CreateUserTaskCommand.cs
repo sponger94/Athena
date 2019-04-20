@@ -9,9 +9,14 @@ namespace Tasks.API.Application.Commands
         [DataMember]
         public string Name { get; private set; }
 
-        public CreateUserTaskCommand(string name)
+        [DataMember]
+        public int ProjectId { get; private set; }
+
+        public CreateUserTaskCommand(string name, int? projectId)
         {
             Name = name;
+            if (projectId != null) 
+                ProjectId = projectId.Value;
         }
     }
 }

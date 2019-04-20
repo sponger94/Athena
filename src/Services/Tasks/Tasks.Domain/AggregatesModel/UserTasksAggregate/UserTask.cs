@@ -12,7 +12,7 @@ namespace Tasks.Domain.AggregatesModel.UserTasksAggregate
 
         public bool IsCompleted { get; private set; }
 
-        public int? ProjectId { get; private set; }
+        public int ProjectId { get; private set; }
 
         private List<Attachment> _attachments;
         public IReadOnlyCollection<Attachment> Attachments => _attachments;

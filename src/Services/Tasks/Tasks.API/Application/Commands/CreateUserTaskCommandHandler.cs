@@ -27,7 +27,7 @@ namespace Tasks.API.Application.Commands
         {
             //TODO: Publish integration event
 
-            var userTask = new UserTask(message.Name);
+            var userTask = new UserTask(message.Name, message.ProjectId);
             _userTaskRepository.Add(userTask);
 
             return await _userTaskRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
