@@ -82,7 +82,7 @@ namespace Tasks.API.Controllers
         //POST api/v1/[controller]/create
         [HttpPost]
         [Route("create")]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> CreateUserTask([FromBody] CreateUserTaskCommand createUserTaskCommand)
         {
@@ -94,9 +94,24 @@ namespace Tasks.API.Controllers
             return BadRequest();
         }
 
+        //POST api/v1/[controller]/delete
+        [HttpPost]
+        [Route("delete")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> CreateUserTask([FromBody] RemoveUserTaskCommand removeUserTaskCommand)
+        {
+            bool result = await _mediator.Send(removeUserTaskCommand);
+
+            if (result)
+                return Ok();
+
+            return BadRequest();
+        }
+
         //POST api/v1/[controller]
         [HttpPost]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> AddAttachment([FromBody] AddAttachmentCommand addAttachmentCommand)
         {
@@ -124,7 +139,7 @@ namespace Tasks.API.Controllers
 
         //POST api/v1/[controller]
         [HttpPost]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> AddNote([FromBody] AddNoteCommand addNoteCommand)
         {
@@ -152,7 +167,7 @@ namespace Tasks.API.Controllers
 
         //POST api/v1/[controller]
         [HttpPost]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> AddSubTask([FromBody] AddSubTaskCommand addSubTaskCommand)
         {
