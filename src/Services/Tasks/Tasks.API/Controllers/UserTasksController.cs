@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Tasks.API.Application.Commands;
 using Tasks.API.Application.Queries;
 using Tasks.API.Services;
 
@@ -76,6 +77,20 @@ namespace Tasks.API.Controllers
             var projectUserTasks = await _taskQueries.GetProjectUserTasksAsync(Guid.Parse(userId), projectId, pageSize, pageIndex);
 
             return Ok(projectUserTasks);
+        }
+
+        [HttpPost]
+        [Route("create")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> CreateUserTask([FromBody] CreateUserTaskCommand createUserTaskCommand)
+        {
+            bool result = await _mediator.Send(createUserTaskCommand);
+
+            if (result)
+                return Ok();
+
+            return BadRequest();
         }
     }
 }
