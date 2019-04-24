@@ -1,10 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Drawing;
 using Tasks.Domain.SeedWork;
 
 namespace Tasks.Domain.AggregatesModel.UserTasksAggregate
 {
-    public class Label : Entity
+    public class Label : Entity, IAggregateRoot
     {
         public int Argb { get; private set; }
 
@@ -18,8 +19,15 @@ namespace Tasks.Domain.AggregatesModel.UserTasksAggregate
 
         public Label(string name, Color color)
         {
-            Name = name;
+            SetName(name);
             SetColor(color);
+        }
+
+        public void SetName(string name)
+        {
+            Name = !string.IsNullOrWhiteSpace(name) 
+                ? name
+                : throw new ArgumentNullException(nameof(name));
         }
 
         public void SetColor(Color color)
