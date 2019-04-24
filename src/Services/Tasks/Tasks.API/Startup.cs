@@ -66,7 +66,8 @@ namespace Tasks.API
 
             app.UseCors("CorsPolicy");
 
-            app.UseMvcWithDefaultRoute();
+            app.UseMvc(routes => { routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}"); });
+            app.UseDeveloperExceptionPage();
 
             app.UseSwagger()
                 .UseSwaggerUI(c =>

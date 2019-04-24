@@ -55,18 +55,6 @@ namespace Tasks.API.Controllers
             return Ok(userTasks);
         }
 
-        //GET api/v1/[controller]/projects[?pageSize=3&pageIndex=18]
-        [HttpGet]
-        [Route("projects")]
-        [ProducesResponseType(typeof(IEnumerable<ProjectSummary>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetProjectsAsync([FromQuery] int pageSize = 20, [FromQuery] int pageIndex = 0)
-        {
-            var userId = _identityService.GetUserIdentity();
-            var projectUserTasks = await _taskQueries.GetProjectsAsync(Guid.Parse(userId), pageSize, pageIndex);
-
-            return Ok(projectUserTasks);
-        }
-
         //GET api/v1/[controller]/projects/5[?pageSize=3&pageIndex=18]
         [HttpGet]
         [Route("projects/{projectId:int}")]
@@ -82,7 +70,7 @@ namespace Tasks.API.Controllers
         //POST api/v1/[controller]/create
         [HttpPost]
         [Route("create")]
-        [ProducesResponseType((int)HttpStatusCode.Created)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> CreateUserTask([FromBody] CreateUserTaskCommand createUserTaskCommand)
         {
@@ -94,12 +82,12 @@ namespace Tasks.API.Controllers
             return BadRequest();
         }
 
-        //POST api/v1/[controller]/delete
-        [HttpPost]
+        //DELETE api/v1/[controller]/delete
+        [HttpDelete]
         [Route("delete")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> CreateUserTask([FromBody] RemoveUserTaskCommand removeUserTaskCommand)
+        public async Task<IActionResult> DeleteUserTask([FromBody] RemoveUserTaskCommand removeUserTaskCommand)
         {
             bool result = await _mediator.Send(removeUserTaskCommand);
 
@@ -109,9 +97,10 @@ namespace Tasks.API.Controllers
             return BadRequest();
         }
 
-        //POST api/v1/[controller]
-        [HttpPost]
-        [ProducesResponseType((int)HttpStatusCode.Created)]
+        //PUT api/v1/[controller]
+        [HttpPut]
+        [Route("add/attachment")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> AddAttachment([FromBody] AddAttachmentCommand addAttachmentCommand)
         {
@@ -123,8 +112,9 @@ namespace Tasks.API.Controllers
             return BadRequest();
         }
 
-        //POST api/v1/[controller]
-        [HttpPost]
+        //PUT api/v1/[controller]
+        [HttpPut]
+        [Route("remove/attachment")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> RemoveAttachment([FromBody] RemoveAttachmentCommand removeAttachmentCommand)
@@ -137,9 +127,10 @@ namespace Tasks.API.Controllers
             return BadRequest();
         }
 
-        //POST api/v1/[controller]
-        [HttpPost]
-        [ProducesResponseType((int)HttpStatusCode.Created)]
+        //PUT api/v1/[controller]
+        [HttpPut]
+        [Route("add/note")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> AddNote([FromBody] AddNoteCommand addNoteCommand)
         {
@@ -151,8 +142,9 @@ namespace Tasks.API.Controllers
             return BadRequest();
         }
 
-        //POST api/v1/[controller]
-        [HttpPost]
+        //PUT api/v1/[controller]
+        [HttpPut]
+        [Route("remove/note")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> RemoveNote([FromBody] RemoveNoteCommand removeNoteCommand)
@@ -165,9 +157,10 @@ namespace Tasks.API.Controllers
             return BadRequest();
         }
 
-        //POST api/v1/[controller]
-        [HttpPost]
-        [ProducesResponseType((int)HttpStatusCode.Created)]
+        //PUT api/v1/[controller]
+        [HttpPut]
+        [Route("add/subtask")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> AddSubTask([FromBody] AddSubTaskCommand addSubTaskCommand)
         {
@@ -179,8 +172,9 @@ namespace Tasks.API.Controllers
             return BadRequest();
         }
 
-        //POST api/v1/[controller]
-        [HttpPost]
+        //PUT api/v1/[controller]
+        [HttpPut]
+        [Route("remove/subtask")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> RemoveSubTask([FromBody] RemoveSubTaskCommand removeSubTaskCommand)

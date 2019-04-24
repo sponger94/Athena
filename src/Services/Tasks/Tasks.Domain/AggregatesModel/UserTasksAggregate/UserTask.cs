@@ -78,5 +78,10 @@ namespace Tasks.Domain.AggregatesModel.UserTasksAggregate
         {
             _subTasks.Remove(subTask);
         }
+
+        public void SetProjectId(int projectId)
+        {
+            ProjectId = projectId;
+        }
     }
 }
