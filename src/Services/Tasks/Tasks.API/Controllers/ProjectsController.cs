@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Tasks.API.Application.Commands;
+using Tasks.API.Application.Commands.Project;
 using Tasks.API.Application.Queries;
 using Tasks.API.Services;
 
@@ -62,6 +63,20 @@ namespace Tasks.API.Controllers
         public async Task<IActionResult> DeleteProjectAsync([FromBody] RemoveProjectCommand removeProjectCommand)
         {
             bool result = await _mediator.Send(removeProjectCommand);
+
+            if (result)
+                return Ok();
+
+            return BadRequest();
+        }
+
+        [HttpPut]
+        [Route("update")]
+        [ProducesResponseType((int) HttpStatusCode.OK)]
+        [ProducesResponseType((int) HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> UpdateLabelAsync([FromBody] UpdateProjectCommand updateProjectCommand)
+        {
+            bool result = await _mediator.Send(updateProjectCommand);
 
             if (result)
                 return Ok();

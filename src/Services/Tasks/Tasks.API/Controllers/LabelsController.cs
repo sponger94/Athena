@@ -61,5 +61,33 @@ namespace Tasks.API.Controllers
 
             return BadRequest();
         }
+
+        [HttpDelete]
+        [Route("delete")]
+        [ProducesResponseType((int) HttpStatusCode.OK)]
+        [ProducesResponseType((int) HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> RemoveLabelAsync([FromBody] RemoveLabelCommand removeLabelCommand)
+        {
+            bool result = await _mediator.Send(removeLabelCommand);
+
+            if (result)
+                return Ok();
+
+            return BadRequest();
+        }
+
+        [HttpPut]
+        [Route("update")]
+        [ProducesResponseType((int) HttpStatusCode.OK)]
+        [ProducesResponseType((int) HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> UpdateLabelAsync([FromBody] UpdateLabelCommand updateLabelCommand)
+        {
+            bool result = await _mediator.Send(updateLabelCommand);
+
+            if (result)
+                return Ok();
+
+            return BadRequest();
+        }
     }
 }
