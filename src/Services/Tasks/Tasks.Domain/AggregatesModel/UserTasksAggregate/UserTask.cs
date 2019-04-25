@@ -91,6 +91,16 @@ namespace Tasks.Domain.AggregatesModel.UserTasksAggregate
             _subTasks.Remove(subTask);
         }
 
+        public void SetName(string name)
+        {
+            Name = name;
+        }
+
+        public void SetIsCompleted(bool isCompleted)
+        {
+            IsCompleted = isCompleted;
+        }
+
         public void SetProjectId(int projectId)
         {
             ProjectId = projectId;

@@ -68,7 +68,7 @@ namespace Tasks.API.Controllers
                 return Ok();
 
             return BadRequest();
-        }`
+        }
 
         [HttpPut]
         [Route("update")]
