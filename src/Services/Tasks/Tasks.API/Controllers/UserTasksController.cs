@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Tasks.API.Application.Commands;
+using Tasks.API.Application.Commands.UserTask;
 using Tasks.API.Application.Queries;
 using Tasks.API.Services;
 
@@ -72,7 +73,7 @@ namespace Tasks.API.Controllers
         [Route("create")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> CreateUserTask([FromBody] CreateUserTaskCommand createUserTaskCommand)
+        public async Task<IActionResult> CreateUserTaskAsync([FromBody] CreateUserTaskCommand createUserTaskCommand)
         {
             bool result = await _mediator.Send(createUserTaskCommand);
 
@@ -87,7 +88,7 @@ namespace Tasks.API.Controllers
         [Route("delete")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> DeleteUserTask([FromBody] RemoveUserTaskCommand removeUserTaskCommand)
+        public async Task<IActionResult> DeleteUserTaskAsync([FromBody] RemoveUserTaskCommand removeUserTaskCommand)
         {
             bool result = await _mediator.Send(removeUserTaskCommand);
 
@@ -102,7 +103,7 @@ namespace Tasks.API.Controllers
         [Route("add/attachment")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> AddAttachment([FromBody] AddAttachmentCommand addAttachmentCommand)
+        public async Task<IActionResult> AddAttachmentAsync([FromBody] AddAttachmentCommand addAttachmentCommand)
         {
             bool result = await _mediator.Send(addAttachmentCommand);
 
@@ -117,9 +118,39 @@ namespace Tasks.API.Controllers
         [Route("remove/attachment")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> RemoveAttachment([FromBody] RemoveAttachmentCommand removeAttachmentCommand)
+        public async Task<IActionResult> RemoveAttachmentAsync([FromBody] RemoveAttachmentCommand removeAttachmentCommand)
         {
             bool result = await _mediator.Send(removeAttachmentCommand);
+
+            if (result)
+                return Ok();
+
+            return BadRequest();
+        }
+
+        //PUT api/v1/[controller]
+        [HttpPut]
+        [Route("add/label")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> AddLabelItemAsync([FromBody] AddLabelItemCommand addLabelCommand)
+        {
+            bool result = await _mediator.Send(addLabelCommand);
+
+            if (result)
+                return Ok();
+
+            return BadRequest();
+        }
+
+        //PUT api/v1/[controller]
+        [HttpPut]
+        [Route("remove/label")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> RemoveLabelItemAsync([FromBody] RemoveLabelItemCommand removeLabelCommand)
+        {
+            bool result = await _mediator.Send(removeLabelCommand);
 
             if (result)
                 return Ok();
@@ -132,7 +163,7 @@ namespace Tasks.API.Controllers
         [Route("add/note")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> AddNote([FromBody] AddNoteCommand addNoteCommand)
+        public async Task<IActionResult> AddNoteAsync([FromBody] AddNoteCommand addNoteCommand)
         {
             bool result = await _mediator.Send(addNoteCommand);
 
@@ -147,7 +178,7 @@ namespace Tasks.API.Controllers
         [Route("remove/note")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> RemoveNote([FromBody] RemoveNoteCommand removeNoteCommand)
+        public async Task<IActionResult> RemoveNoteAsync([FromBody] RemoveNoteCommand removeNoteCommand)
         {
             bool result = await _mediator.Send(removeNoteCommand);
 
@@ -162,7 +193,7 @@ namespace Tasks.API.Controllers
         [Route("add/subtask")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> AddSubTask([FromBody] AddSubTaskCommand addSubTaskCommand)
+        public async Task<IActionResult> AddSubTaskAsync([FromBody] AddSubTaskCommand addSubTaskCommand)
         {
             bool result = await _mediator.Send(addSubTaskCommand);
 
@@ -177,7 +208,7 @@ namespace Tasks.API.Controllers
         [Route("remove/subtask")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> RemoveSubTask([FromBody] RemoveSubTaskCommand removeSubTaskCommand)
+        public async Task<IActionResult> RemoveSubTaskAsync([FromBody] RemoveSubTaskCommand removeSubTaskCommand)
         {
             bool result = await _mediator.Send(removeSubTaskCommand);
 

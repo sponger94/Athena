@@ -1,7 +1,7 @@
 ﻿using System.Runtime.Serialization;
 using MediatR;
 
-namespace Tasks.API.Application.Commands
+namespace Tasks.API.Application.Commands.UserTask
 {
     [DataContract]
     public class RemoveSubTaskCommand : IRequest<bool>

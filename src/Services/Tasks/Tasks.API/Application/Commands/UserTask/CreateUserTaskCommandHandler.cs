@@ -1,11 +1,11 @@
-﻿using MediatR;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Tasks.API.Services;
 using Tasks.Domain.AggregatesModel.UserTasksAggregate;
 
-namespace Tasks.API.Application.Commands
+namespace Tasks.API.Application.Commands.UserTask
 {
     public class CreateUserTaskCommandHandler
         : IRequestHandler<CreateUserTaskCommand, bool>
@@ -27,7 +27,7 @@ namespace Tasks.API.Application.Commands
         {
             //TODO: Publish integration event
 
-            var userTask = new UserTask(message.Name, message.ProjectId);
+            var userTask = new Domain.AggregatesModel.UserTasksAggregate.UserTask(message.Name, message.ProjectId);
             _userTaskRepository.Add(userTask);
 
             return await _userTaskRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);

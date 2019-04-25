@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Threading.Tasks;
+﻿using System.Runtime.Serialization;
 using MediatR;
 
-namespace Tasks.API.Application.Commands
+namespace Tasks.API.Application.Commands.Project
 {
     [DataContract]
     public class RemoveProjectCommand : IRequest<bool>

@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Tasks.API.Services;
 using Tasks.Domain.AggregatesModel.ProjectsAggregate;
-using Tasks.Domain.AggregatesModel.UserTasksAggregate;
 
-namespace Tasks.API.Application.Commands
+namespace Tasks.API.Application.Commands.Project
 {
     public class CreateProjectCommandHandler : IRequestHandler<CreateProjectCommand, bool>
     {
@@ -31,7 +28,7 @@ namespace Tasks.API.Application.Commands
             //TODO: Publish integration event
 
             var identityGuid = _identityService.GetUserIdentity();
-            var project = new Project(identityGuid, request.Name, Color.FromArgb(request.Argb));
+            var project = new Domain.AggregatesModel.ProjectsAggregate.Project(identityGuid, request.Name, Color.FromArgb(request.Argb));
             _projectRepository.Add(project);
 
             return await _projectRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);

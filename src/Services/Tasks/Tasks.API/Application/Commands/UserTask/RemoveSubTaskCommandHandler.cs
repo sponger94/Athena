@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Tasks.Domain.AggregatesModel.UserTasksAggregate;
 
-namespace Tasks.API.Application.Commands
+namespace Tasks.API.Application.Commands.UserTask
 {
     public class RemoveSubTaskCommandHandler : IRequestHandler<RemoveSubTaskCommand, bool>
     {

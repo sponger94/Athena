@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Tasks.Domain.AggregatesModel.UserTasksAggregate;
 
-namespace Tasks.API.Application.Commands
+namespace Tasks.API.Application.Commands.UserTask
 {
     public class AddAttachmentCommandHandler : IRequestHandler<AddAttachmentCommand, bool>
     {

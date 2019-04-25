@@ -68,13 +68,13 @@ namespace Tasks.API.Controllers
                 return Ok();
 
             return BadRequest();
-        }
+        }`
 
         [HttpPut]
         [Route("update")]
         [ProducesResponseType((int) HttpStatusCode.OK)]
         [ProducesResponseType((int) HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> UpdateLabelAsync([FromBody] UpdateProjectCommand updateProjectCommand)
+        public async Task<IActionResult> UpdateProjectAsync([FromBody] UpdateProjectCommand updateProjectCommand)
         {
             bool result = await _mediator.Send(updateProjectCommand);
 

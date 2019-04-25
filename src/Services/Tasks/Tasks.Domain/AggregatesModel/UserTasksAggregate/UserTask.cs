@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Tasks.Domain.SeedWork;
 
 namespace Tasks.Domain.AggregatesModel.UserTasksAggregate
@@ -57,6 +58,17 @@ namespace Tasks.Domain.AggregatesModel.UserTasksAggregate
         public void RemoveAttachment(Attachment attachment)
         {
             _attachments.Remove(attachment);
+        }
+
+        public void AddLabel(Label label)
+        {
+            _labelItems.Add(new UserTaskLabelItem(label.Id));
+        }
+
+        public void RemoveLabel(Label label)
+        {
+            var labelItem = _labelItems.FirstOrDefault(li => li.LabelId == label.Id);
+            _labelItems.Remove(labelItem);
         }
 
         public void AddNote(Note note)

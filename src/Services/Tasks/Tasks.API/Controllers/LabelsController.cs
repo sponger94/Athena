@@ -50,8 +50,8 @@ namespace Tasks.API.Controllers
 
         [HttpPost]
         [Route("create")]
-        [ProducesResponseType((int) HttpStatusCode.OK)]
-        [ProducesResponseType((int) HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> CreateLabelAsync([FromBody] CreateLabelCommand createLabelCommand)
         {
             bool result = await _mediator.Send(createLabelCommand);
@@ -64,8 +64,8 @@ namespace Tasks.API.Controllers
 
         [HttpDelete]
         [Route("delete")]
-        [ProducesResponseType((int) HttpStatusCode.OK)]
-        [ProducesResponseType((int) HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> RemoveLabelAsync([FromBody] RemoveLabelCommand removeLabelCommand)
         {
             bool result = await _mediator.Send(removeLabelCommand);
@@ -78,8 +78,8 @@ namespace Tasks.API.Controllers
 
         [HttpPut]
         [Route("update")]
-        [ProducesResponseType((int) HttpStatusCode.OK)]
-        [ProducesResponseType((int) HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> UpdateLabelAsync([FromBody] UpdateLabelCommand updateLabelCommand)
         {
             bool result = await _mediator.Send(updateLabelCommand);

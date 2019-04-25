@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Tasks.Domain.AggregatesModel.ProjectsAggregate;
 
-namespace Tasks.API.Application.Commands
+namespace Tasks.API.Application.Commands.Project
 {
     public class RemoveProjectCommandHandler : IRequestHandler<RemoveProjectCommand, bool>
     {
