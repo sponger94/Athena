@@ -15,7 +15,11 @@ using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using Athena.BuildingBlocks.EventBus;
+using Athena.BuildingBlocks.EventBus.Abstractions;
+using Athena.Pomodoro.API.Infrastructure.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace Athena.Pomodoro.API
 {
@@ -31,17 +35,18 @@ namespace Athena.Pomodoro.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            //TODO: Register app insights
+            RegisterAppInsights(services);
 
             services.AddMvc(options => options.Filters.Add(typeof(HttpGlobalExceptionFilter)))
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddControllersAsServices();
 
-            //TODO: Configure Auth service
+            ConfigureAuthService(services);
+
+            services.AddCustomHealthCheck(Configuration);
 
             services.Configure<PomodoroSettings>(Configuration);
 
-            //TODO: If Azure service bus enabled
 
             services.AddSingleton<IRabbitMQPersistentConnection>(sp =>
             {
@@ -71,7 +76,7 @@ namespace Athena.Pomodoro.API
                 return new DefaultRabbitMQPersistentConnection(factory, logger, retryCount);
             });
 
-            //TODO: Register eventBus
+            RegisterEventBus(services);
 
             //Add framework services
             services.AddSwaggerGen(options =>
@@ -190,8 +195,62 @@ namespace Athena.Pomodoro.API
         {
             if (Configuration.GetValue<bool>("UseLoadTest"))
             {
-                app.UseMiddleware<ByPass>()
+                app.UseMiddleware<ByPassAuthMiddleware>();
             }
+
+            app.UseAuthentication();
+        }
+
+        private void RegisterEventBus(IServiceCollection services)
+        {
+            var subscriptionClientName = Configuration["SubscriptionClientName"];
+
+            services.AddSingleton<IEventBus, EventBusRabbitMQ>(sp =>
+            {
+                var rabbitMQPersistentConnection = sp.GetRequiredService<IRabbitMQPersistentConnection>();
+                var lifetimeScope = sp.GetRequiredService<ILifetimeScope>();
+                var logger = sp.GetRequiredService<ILogger<EventBusRabbitMQ>>();
+                var eventBusSubscriptionsManager = sp.GetRequiredService<IEventBusSubscriptionsManager>();
+
+                var retryCount = 5;
+                if (!string.IsNullOrEmpty(Configuration["EventBusRetryCount"]))
+                {
+                    retryCount = int.Parse(Configuration["EventBusRetryCount"]);
+                }
+
+                return new EventBusRabbitMQ(rabbitMQPersistentConnection, logger, lifetimeScope, eventBusSubscriptionsManager);
+            });
+
+            services.AddSingleton<IEventBusSubscriptionsManager, InMemoryEventBusSubscriptionsManager>();
+            
+            //TODO: Add integration event handlers
+            //services.AddTransient<>()
+        }
+
+        private void ConfigureEventBus(IApplicationBuilder app)
+        {
+            var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
+
+            //TODO: Subscribe integration event handlers
+            //eventBus.Subscribe<>();
+        }
+    }
+
+    public static class CustomExtensionMethods
+    {
+        public static IServiceCollection AddCustomHealthCheck(this IServiceCollection services,
+            IConfiguration configuration)
+        {
+            var hcBuilder = services.AddHealthChecks();
+            hcBuilder.AddCheck("self", () => HealthCheckResult.Healthy());
+
+            hcBuilder
+                .AddRabbitMQ(
+                    $"amqp://{configuration["EventBusConnection"]}",
+                    name: "basket-rabbitmqbus-check",
+                    tags: new string[] { "rabbitmqbus" });
+
+            return services;
         }
     }
 }
