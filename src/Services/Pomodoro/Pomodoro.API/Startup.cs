@@ -1,18 +1,18 @@
-﻿using Athena.BuildingBlocks.EventBusRabbitMQ;
+﻿using System.Collections.Generic;
+using Athena.BuildingBlocks.EventBusRabbitMQ;
+using Athena.Pomodoro.API.Infrastructure.Filters;
+using Athena.Pomodoro.API.Infrastructure.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Pomodoro.API.Infrastructure.Filters;
 using RabbitMQ.Client;
 using Swashbuckle.AspNetCore.Swagger;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Http;
-using Pomodoro.API.Infrastructure.Services;
 
-namespace Pomodoro.API
+namespace Athena.Pomodoro.API
 {
     public class Startup
     {

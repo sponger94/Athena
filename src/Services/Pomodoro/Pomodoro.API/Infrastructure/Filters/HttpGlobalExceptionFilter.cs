@@ -1,12 +1,12 @@
 ﻿using System.Net;
+using Athena.Pomodoro.API.Infrastructure.ActionResults;
+using Athena.Pomodoro.API.Infrastructure.Exceptions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
-using Pomodoro.API.Infrastructure.ActionResults;
-using Pomodoro.API.Infrastructure.Exceptions;
 
-namespace Pomodoro.API.Infrastructure.Filters
+namespace Athena.Pomodoro.API.Infrastructure.Filters
 {
     public class HttpGlobalExceptionFilter : IExceptionFilter
     {

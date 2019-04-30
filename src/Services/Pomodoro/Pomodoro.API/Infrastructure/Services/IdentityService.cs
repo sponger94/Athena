@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Http;
 
-namespace Pomodoro.API.Infrastructure.Services
+namespace Athena.Pomodoro.API.Infrastructure.Services
 {
     public class IdentityService : IIdentityService
     {

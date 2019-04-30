@@ -1,4 +1,4 @@
-﻿namespace Pomodoro.API.Infrastructure.Services
+﻿namespace Athena.Pomodoro.API.Infrastructure.Services
 {
     public interface IIdentityService
     {
