@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using Athena.BuildingBlocks.EventBus.Events;
 using Newtonsoft.Json;
 
 namespace Athena.BuildingBlocks.IntegrationEventLogEF

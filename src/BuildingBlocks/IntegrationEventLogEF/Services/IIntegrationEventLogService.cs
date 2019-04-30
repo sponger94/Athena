@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Threading.Tasks;
+using Athena.BuildingBlocks.EventBus.Events;
 
 namespace Athena.BuildingBlocks.IntegrationEventLogEF.Services
 {
