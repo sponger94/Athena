@@ -22,7 +22,6 @@
 
   <ItemGroup>
     <Folder Include="Application\IntegrationEvents\EventHandling\" />
-    <Folder Include="Application\IntegrationEvents\Events\" />
   </ItemGroup>
 
 </Project>
