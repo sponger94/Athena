@@ -7,6 +7,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Pomodoro.API.Infrastructure.Filters;
 using RabbitMQ.Client;
+using Swashbuckle.AspNetCore.Swagger;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
+using Pomodoro.API.Infrastructure.Services;
 
 namespace Pomodoro.API
 {
@@ -48,10 +52,62 @@ namespace Pomodoro.API
                     factory.UserName = Configuration["EventBusUserName"];
                 }
 
+                if (!string.IsNullOrEmpty(Configuration["EventBusPassword"]))
+                {
+                    factory.Password = Configuration["EventBusPassword"];
+                }
+
                 var retryCount = 5;
+                if (!string.IsNullOrEmpty(Configuration["EventBusRetryCount"]))
+                {
+                    retryCount = int.Parse(Configuration["EventBusRetryCount"]);
+                }
 
                 return new DefaultRabbitMQPersistentConnection(factory, logger, retryCount);
             });
+
+            //TODO: Register eventBus
+
+            //Add framework services
+            services.AddSwaggerGen(options =>
+            {
+                options.DescribeAllEnumsAsStrings();
+                options.SwaggerDoc("v1", new Info
+                {
+                    Title = "Athena - Pomodoro HTTP API",
+                    Version = "v1",
+                    Description = "The Pomodoro Microservice HTTP API. THis is a Data-Driven/CRUD microservice.",
+                    TermsOfService = "//TODO: Terms of service"
+                });
+
+                options.AddSecurityDefinition("oauth2", new OAuth2Scheme
+                {
+                    Type = "oauth2",
+                    Flow = "implicit",
+                    AuthorizationUrl = $"{Configuration.GetValue<string>("IdentityUrlExternal")}/connect/authorize",
+                    TokenUrl = $"{Configuration.GetValue<string>("IdentityUrlExternal")}/connect/token",
+                    Scopes = new Dictionary<string, string>()
+                    {
+                        {"pomodoro", "Pomodoro API"}
+                    }
+                });
+
+                options.OperationFilter<AuthorizeCheckOperationFilter>();
+
+            });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder
+                        .SetIsOriginAllowed(host => true)
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials());
+            });
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<IIdentityService, IdentityService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
