@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Athena.BuildingBlocks.EventBusRabbitMQ;
+﻿using Athena.BuildingBlocks.EventBusRabbitMQ;
 using Athena.Pomodoro.API.Infrastructure.Filters;
 using Athena.Pomodoro.API.Infrastructure.Services;
 using Autofac;
@@ -14,6 +12,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using Swashbuckle.AspNetCore.Swagger;
+using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Athena.Pomodoro.API
 {
@@ -121,14 +123,75 @@ namespace Athena.Pomodoro.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            if (env.IsDevelopment())
+            //TODO: Add azure web diagnostics and app insights
+            //loggerFactory.Add
+
+            var pathBase = Configuration["PATH_BASE"];
+            if (!string.IsNullOrEmpty(pathBase))
             {
-                app.UseDeveloperExceptionPage();
+                app.UsePathBase(pathBase);
             }
 
-            app.UseMvc();
+            //TODO: Use health checks
+            app.UseStaticFiles();
+            app.UseCors("CorsPolicy");
+
+            //ConfigureAuth();
+
+            app.UseMvcWithDefaultRoute();
+
+            app.UseSwagger()
+                .UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint(
+                        $"{(!string.IsNullOrEmpty(pathBase) ? pathBase : string.Empty)}/swagger/v1/swagger.json",
+                        "Pomodoro.API V1");
+                    c.OAuthClientId("pomodoroswaggerui");
+                    c.OAuthAppName("Pomodoro Swagger UI");
+                });
+
+            //TODO: Configure event bus
+        }
+
+        private void RegisterAppInsights(IServiceCollection services)
+        {
+            services.AddApplicationInsightsTelemetry(Configuration);
+            var orchestratorType = Configuration.GetValue<string>("OrchestratorType");
+
+            if (orchestratorType?.ToUpper() == "K8S")
+            {
+                //Enable K8s telemetry initializer
+                services.AddApplicationInsightsKubernetesEnricher();
+            }
+        }
+
+        private void ConfigureAuthService(IServiceCollection services)
+        {
+            //Prevent from mapping "sub" claim to name identifier
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
+            var identityUrl = Configuration.GetValue<string>("IdentityUrl");
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.Authority = identityUrl;
+                options.RequireHttpsMetadata = false;
+                options.Audience = "pomodoro";
+            });
+        }
+
+        protected virtual void ConfigureAuth(IApplicationBuilder app)
+        {
+            if (Configuration.GetValue<bool>("UseLoadTest"))
+            {
+                app.UseMiddleware<ByPass>()
+            }
         }
     }
 }
