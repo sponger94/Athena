@@ -257,6 +257,10 @@ namespace Athena.Pomodoro.API
             hcBuilder.AddCheck("self", () => HealthCheckResult.Healthy());
 
             hcBuilder
+                .AddSqlServer(
+                    configuration["ConnectionString"],
+                    name: "PomodoroDB-check",
+                    tags: new[] {"pomodorodb"})
                 .AddRabbitMQ(
                     $"amqp://{configuration["EventBusConnection"]}",
                     name: "basket-rabbitmqbus-check",
