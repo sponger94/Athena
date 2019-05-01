@@ -18,7 +18,9 @@ using System.IdentityModel.Tokens.Jwt;
 using Athena.BuildingBlocks.EventBus;
 using Athena.BuildingBlocks.EventBus.Abstractions;
 using Athena.Pomodoro.API.Infrastructure.Middlewares;
+using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace Athena.Pomodoro.API
@@ -139,11 +141,21 @@ namespace Athena.Pomodoro.API
                 app.UsePathBase(pathBase);
             }
 
-            //TODO: Use health checks
+            app.UseHealthChecks("/hc", new HealthCheckOptions
+            {
+                Predicate = _ => true,
+                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+            });
+
+            app.UseHealthChecks("/liveness", new HealthCheckOptions
+            {
+                Predicate = r => r.Name.Contains("self")
+            });
+
             app.UseStaticFiles();
             app.UseCors("CorsPolicy");
 
-            //ConfigureAuth();
+            ConfigureAuth(app);
 
             app.UseMvcWithDefaultRoute();
 
@@ -157,7 +169,7 @@ namespace Athena.Pomodoro.API
                     c.OAuthAppName("Pomodoro Swagger UI");
                 });
 
-            //TODO: Configure event bus
+            ConfigureEventBus(app);
         }
 
         private void RegisterAppInsights(IServiceCollection services)
@@ -218,7 +230,7 @@ namespace Athena.Pomodoro.API
                     retryCount = int.Parse(Configuration["EventBusRetryCount"]);
                 }
 
-                return new EventBusRabbitMQ(rabbitMQPersistentConnection, logger, lifetimeScope, eventBusSubscriptionsManager);
+                return new EventBusRabbitMQ(rabbitMQPersistentConnection, logger, lifetimeScope, eventBusSubscriptionsManager, subscriptionClientName, retryCount);
             });
 
             services.AddSingleton<IEventBusSubscriptionsManager, InMemoryEventBusSubscriptionsManager>();
