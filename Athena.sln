@@ -35,6 +35,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodoro.API", "src\Service
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{9957DD9D-854D-46B1-B14D-161E44D71C4A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tasks.UnitTests", "src\Services\Tasks\tests\Tasks.UnitTests\Tasks.UnitTests.csproj", "{13306EB1-ECE0-4A06-A6E3-74283A5C99A3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,10 @@ Global
 		{BC8BD149-E1C2-43B3-A82D-BDB37DA9AD61}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC8BD149-E1C2-43B3-A82D-BDB37DA9AD61}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC8BD149-E1C2-43B3-A82D-BDB37DA9AD61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13306EB1-ECE0-4A06-A6E3-74283A5C99A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13306EB1-ECE0-4A06-A6E3-74283A5C99A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13306EB1-ECE0-4A06-A6E3-74283A5C99A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13306EB1-ECE0-4A06-A6E3-74283A5C99A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -88,6 +94,7 @@ Global
 		{651C5FA4-5B68-409C-8309-1E55D4B76778} = {1288BD14-1F8A-45CC-972E-B913676F9248}
 		{BC8BD149-E1C2-43B3-A82D-BDB37DA9AD61} = {651C5FA4-5B68-409C-8309-1E55D4B76778}
 		{9957DD9D-854D-46B1-B14D-161E44D71C4A} = {651C5FA4-5B68-409C-8309-1E55D4B76778}
+		{13306EB1-ECE0-4A06-A6E3-74283A5C99A3} = {9957DD9D-854D-46B1-B14D-161E44D71C4A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {57DC7C66-5D68-40E8-9910-4458D9EBFA42}
