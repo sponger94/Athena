@@ -7,6 +7,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Tasks.API.Application.Commands.Label;
 using Tasks.API.Application.Queries;
+using Tasks.API.Extensions;
 using Tasks.API.Services;
 
 namespace Tasks.API.Controllers
@@ -54,12 +55,7 @@ namespace Tasks.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> CreateLabelAsync([FromBody] CreateLabelCommand createLabelCommand)
         {
-            bool result = await _mediator.Send(createLabelCommand);
-
-            if (result)
-                return Ok();
-
-            return BadRequest();
+            return await this.RequestExecutionResultAsync(_mediator, createLabelCommand);
         }
 
         [HttpDelete]
@@ -68,12 +64,7 @@ namespace Tasks.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> RemoveLabelAsync([FromBody] RemoveLabelCommand removeLabelCommand)
         {
-            bool result = await _mediator.Send(removeLabelCommand);
-
-            if (result)
-                return Ok();
-
-            return BadRequest();
+            return await this.RequestExecutionResultAsync(_mediator, removeLabelCommand);
         }
 
         [HttpPut]
@@ -82,12 +73,7 @@ namespace Tasks.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> UpdateLabelAsync([FromBody] UpdateLabelCommand updateLabelCommand)
         {
-            bool result = await _mediator.Send(updateLabelCommand);
-
-            if (result)
-                return Ok();
-
-            return BadRequest();
+            return await this.RequestExecutionResultAsync(_mediator, updateLabelCommand);
         }
     }
 }

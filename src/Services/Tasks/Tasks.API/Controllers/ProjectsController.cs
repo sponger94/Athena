@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Tasks.API.Application.Commands;
 using Tasks.API.Application.Commands.Project;
 using Tasks.API.Application.Queries;
+using Tasks.API.Extensions;
 using Tasks.API.Services;
 
 namespace Tasks.API.Controllers
@@ -48,12 +49,7 @@ namespace Tasks.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> CreateProjectAsync([FromBody] CreateProjectCommand createProjectCommand)
         {
-            bool result = await _mediator.Send(createProjectCommand);
-
-            if (result)
-                return Ok();
-
-            return BadRequest();
+            return await this.RequestExecutionResultAsync(_mediator, createProjectCommand);
         }
 
         [HttpDelete]
@@ -62,12 +58,7 @@ namespace Tasks.API.Controllers
         [ProducesResponseType((int) HttpStatusCode.BadRequest)]
         public async Task<IActionResult> DeleteProjectAsync([FromBody] RemoveProjectCommand removeProjectCommand)
         {
-            bool result = await _mediator.Send(removeProjectCommand);
-
-            if (result)
-                return Ok();
-
-            return BadRequest();
+            return await this.RequestExecutionResultAsync(_mediator, removeProjectCommand);
         }
 
         [HttpPut]
@@ -76,12 +67,7 @@ namespace Tasks.API.Controllers
         [ProducesResponseType((int) HttpStatusCode.BadRequest)]
         public async Task<IActionResult> UpdateProjectAsync([FromBody] UpdateProjectCommand updateProjectCommand)
         {
-            bool result = await _mediator.Send(updateProjectCommand);
-
-            if (result)
-                return Ok();
-
-            return BadRequest();
+            return await this.RequestExecutionResultAsync(_mediator, updateProjectCommand);
         }
     }
 }

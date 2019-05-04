@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using Tasks.API.Application.Commands;
 using Tasks.API.Application.Commands.UserTask;
 using Tasks.API.Application.Queries;
+using Tasks.API.Extensions;
 using Tasks.API.Services;
 
 namespace Tasks.API.Controllers
@@ -75,12 +75,7 @@ namespace Tasks.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> CreateUserTaskAsync([FromBody] CreateUserTaskCommand createUserTaskCommand)
         {
-            bool result = await _mediator.Send(createUserTaskCommand);
-
-            if (result)
-                return Ok();
-
-            return BadRequest();
+            return await this.RequestExecutionResultAsync(_mediator, createUserTaskCommand);
         }
 
         //DELETE api/v1/[controller]/delete
@@ -90,12 +85,7 @@ namespace Tasks.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> DeleteUserTaskAsync([FromBody] RemoveUserTaskCommand removeUserTaskCommand)
         {
-            bool result = await _mediator.Send(removeUserTaskCommand);
-
-            if (result)
-                return Ok();
-
-            return BadRequest();
+            return await this.RequestExecutionResultAsync(_mediator, removeUserTaskCommand);
         }
 
         //PUT api/v1/[controller]
@@ -105,12 +95,7 @@ namespace Tasks.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> AddAttachmentAsync([FromBody] AddAttachmentCommand addAttachmentCommand)
         {
-            bool result = await _mediator.Send(addAttachmentCommand);
-
-            if (result)
-                return Ok();
-
-            return BadRequest();
+            return await this.RequestExecutionResultAsync(_mediator, addAttachmentCommand);
         }
 
         //PUT api/v1/[controller]
@@ -120,12 +105,7 @@ namespace Tasks.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> RemoveAttachmentAsync([FromBody] RemoveAttachmentCommand removeAttachmentCommand)
         {
-            bool result = await _mediator.Send(removeAttachmentCommand);
-
-            if (result)
-                return Ok();
-
-            return BadRequest();
+            return await this.RequestExecutionResultAsync(_mediator, removeAttachmentCommand);
         }
 
         //PUT api/v1/[controller]
@@ -135,12 +115,7 @@ namespace Tasks.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> AddLabelItemAsync([FromBody] AddLabelItemCommand addLabelCommand)
         {
-            bool result = await _mediator.Send(addLabelCommand);
-
-            if (result)
-                return Ok();
-
-            return BadRequest();
+            return await this.RequestExecutionResultAsync(_mediator, addLabelCommand);
         }
 
         //PUT api/v1/[controller]
@@ -150,12 +125,7 @@ namespace Tasks.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> RemoveLabelItemAsync([FromBody] RemoveLabelItemCommand removeLabelCommand)
         {
-            bool result = await _mediator.Send(removeLabelCommand);
-
-            if (result)
-                return Ok();
-
-            return BadRequest();
+            return await this.RequestExecutionResultAsync(_mediator, removeLabelCommand);
         }
 
         //PUT api/v1/[controller]
@@ -165,12 +135,7 @@ namespace Tasks.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> AddNoteAsync([FromBody] AddNoteCommand addNoteCommand)
         {
-            bool result = await _mediator.Send(addNoteCommand);
-
-            if (result)
-                return Ok();
-
-            return BadRequest();
+            return await this.RequestExecutionResultAsync(_mediator, addNoteCommand);
         }
 
         //PUT api/v1/[controller]
@@ -180,12 +145,7 @@ namespace Tasks.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> RemoveNoteAsync([FromBody] RemoveNoteCommand removeNoteCommand)
         {
-            bool result = await _mediator.Send(removeNoteCommand);
-
-            if (result)
-                return Ok();
-
-            return BadRequest();
+            return await this.RequestExecutionResultAsync(_mediator, removeNoteCommand);
         }
 
         //PUT api/v1/[controller]
@@ -195,12 +155,7 @@ namespace Tasks.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> AddSubTaskAsync([FromBody] AddSubTaskCommand addSubTaskCommand)
         {
-            bool result = await _mediator.Send(addSubTaskCommand);
-
-            if (result)
-                return Ok();
-
-            return BadRequest();
+            return await this.RequestExecutionResultAsync(_mediator, addSubTaskCommand);
         }
 
         //PUT api/v1/[controller]
@@ -210,12 +165,7 @@ namespace Tasks.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> RemoveSubTaskAsync([FromBody] RemoveSubTaskCommand removeSubTaskCommand)
         {
-            bool result = await _mediator.Send(removeSubTaskCommand);
-
-            if (result)
-                return Ok();
-
-            return BadRequest();
+            return await this.RequestExecutionResultAsync(_mediator, removeSubTaskCommand);
         }
     }
 }
