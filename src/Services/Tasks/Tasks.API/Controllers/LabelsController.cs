@@ -18,15 +18,12 @@ namespace Tasks.API.Controllers
     public class LabelsController : Controller
     {
         private readonly IMediator _mediator;
-        private readonly IIdentityService _identityService;
         private readonly ILabelQueries _labelQueries;
 
         public LabelsController(IMediator mediator,
-            IIdentityService identityService,
             ILabelQueries labelQueries)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-            _identityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
             _labelQueries = labelQueries ?? throw new ArgumentNullException(nameof(labelQueries));
         }
 
