@@ -31,7 +31,7 @@ namespace Tasks.API.Controllers
         [HttpGet]
         [Route("{userTaskId:int}")]
         [ProducesResponseType(typeof(UserTask), (int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetUserTaskByIdAsync(int userTaskId)
         {
             try
@@ -48,10 +48,10 @@ namespace Tasks.API.Controllers
         //GET api/v1/[controller][?pageSize=3&pageIndex=18]
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<UserTaskSummary>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<IEnumerable<UserTaskSummary>>> GetUserTasksAsync([FromQuery]int pageSize = 20, [FromQuery]int pageIndex = 0)
+        public async Task<IActionResult> GetUserTasksAsync([FromQuery]int pageSize = 20, [FromQuery]int pageIndex = 0)
         {
             var userId = _identityService.GetUserIdentity();
-            var userTasks = await _taskQueries.GetUserTasksAsync(Guid.Parse(userId), 20, 0);
+            var userTasks = await _taskQueries.GetUserTasksAsync(Guid.Parse(userId), pageSize, pageIndex);
 
             return Ok(userTasks);
         }

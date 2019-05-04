@@ -26,6 +26,8 @@ namespace Tasks.UnitTests.Application
             _taskQueriesMock = new Mock<IUserTaskQueries>();
         }
 
+        #region GetUserTaskByIdAsync
+
         [Fact]
         public async void GetUserTaskByIdAsync_WithExistingId_ReturnsUserTask()
         {
@@ -45,5 +47,74 @@ namespace Tasks.UnitTests.Application
             var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
             Assert.IsAssignableFrom<UserTask>(okObjectResult.Value);
         }
+
+        [Fact]
+        public async void GetUserTaskByIdAsync_NonExistingId_ReturnsNotFound()
+        {
+            //Arrange
+            var fakeNonExistingId = 32;
+            _taskQueriesMock.Setup(t => t.GetTaskAsync(fakeNonExistingId))
+                .Throws(new Exception());
+
+            //Act
+            var userTasksController = new UserTasksController(
+               _mediatorMock.Object, _identityServiceMock.Object, _taskQueriesMock.Object);
+            var actionResult = await userTasksController.GetUserTaskByIdAsync(fakeNonExistingId);
+
+            //Assert
+            Assert.IsType<NotFoundResult>(actionResult);
+        }
+
+        #endregion
+
+        #region GetUserTasksAsync
+
+        [Fact]
+        public async void GetUserTasksAsync_ReturnsListOfUserTasks()
+        {
+            //Arrange
+            var fakeDynamicResult = new List<UserTaskSummary>().AsEnumerable();
+            _identityServiceMock.Setup(i => i.GetUserIdentity())
+                .Returns(Guid.NewGuid().ToString());
+
+            _taskQueriesMock.Setup(t => t.GetUserTasksAsync(It.IsAny<Guid>(), 20, 0))
+                .Returns(Task.FromResult(fakeDynamicResult));
+
+            //Act
+            var userTasksController = new UserTasksController(
+              _mediatorMock.Object, _identityServiceMock.Object, _taskQueriesMock.Object);
+            var actionResult = await userTasksController.GetUserTasksAsync();
+
+            //Assert
+            var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
+            Assert.IsAssignableFrom<IEnumerable<UserTaskSummary>>(okObjectResult.Value);
+        }
+
+        #endregion
+
+        #region GetProjectUserTasksAsync
+
+        [Fact]
+        public async void GetProjectUserTasksAsync_ReturnsListOfUserTasks()
+        {
+            //Arrange
+            var fakeDynamicResult = new List<UserTaskSummary>().AsEnumerable();
+            _identityServiceMock.Setup(i => i.GetUserIdentity())
+                .Returns(Guid.NewGuid().ToString());
+
+            _taskQueriesMock.Setup(t => t.GetProjectUserTasksAsync(It.IsAny<Guid>(), 5, 20, 0))
+                .Returns(Task.FromResult(fakeDynamicResult));
+
+            //Act
+            var userTasksController = new UserTasksController(
+              _mediatorMock.Object, _identityServiceMock.Object, _taskQueriesMock.Object);
+            var actionResult = await userTasksController.GetUserTasksAsync();
+
+            //Assert
+            var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
+            Assert.IsAssignableFrom<IEnumerable<UserTaskSummary>>(okObjectResult.Value);
+        }
+
+        #endregion
     }
 }
