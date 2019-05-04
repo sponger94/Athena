@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Tasks.API.Application.Queries;
 using Tasks.API.Controllers;
@@ -39,9 +40,10 @@ namespace Tasks.UnitTests.Application
             var userTasksController = new UserTasksController(
                 _mediatorMock.Object, _identityServiceMock.Object, _taskQueriesMock.Object);
             var actionResult = await userTasksController.GetUserTaskByIdAsync(fakeId);
-            _identityServiceMock.Setup(i => i.GetUserIdentity())
-                .Returns(Guid.NewGuid().ToString());
 
+            //Assert
+            var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
+            Assert.IsAssignableFrom<UserTask>(okObjectResult.Value);
         }
     }
 }
