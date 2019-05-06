@@ -66,6 +66,27 @@ namespace Athena.Pomodoro.API.Controllers
             return Ok(model);
         }
 
+        //GET api/v1/[controller]/items/4
+        [HttpGet]
+        [Route("items/{id:int}")]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(Model.Pomodoro), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<Model.Pomodoro>> ItemByIdAsync(int id)
+        {
+            if (id <= 0)
+                return BadRequest();
+
+            var item = await _pomodoroContext.Pomodoros.SingleOrDefaultAsync(p => p.Id == id);
+
+            if (item != null)
+            {
+                return item;
+            }
+
+            return NotFound();
+        }
+
         private async Task<List<Model.Pomodoro>> GetItemsByIdsAsync(string ids)
         {
             var numIds = ids.Split(',').Select(id => (Ok: int.TryParse(id, out int x), Value: x));
@@ -78,6 +99,51 @@ namespace Athena.Pomodoro.API.Controllers
             var idsToSelect = numIds.Select(id => id.Value);
 
             return await _pomodoroContext.Pomodoros.Where(p => idsToSelect.Contains(p.Id)).ToListAsync();
+        }
+
+        //POST api/v1/[controller]/create
+        [HttpPost]
+        [Route("create")]
+        [ProducesResponseType((int)HttpStatusCode.Created)]
+        public async Task<IActionResult> FinishPomodoroAsync([FromBody] Model.Pomodoro pomodoro)
+        {
+            var pomodoroItem = new Model.Pomodoro
+            {
+                ProjectId = pomodoro.ProjectId,
+                ProjectName = pomodoro.ProjectName,
+                Duration = pomodoro.Duration,
+                Time = pomodoro.Time,
+                UserId = pomodoro.UserId
+            };
+            _pomodoroContext.Add(pomodoro);
+            await _pomodoroContext.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(ItemByIdAsync), new { id = pomodoroItem.Id }, null);
+        }
+
+        //DELETE api/v1/[controller]/delete/id
+        [HttpDelete]
+        [Route("delete/{id:int}")]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> DeletePomodoroAsync(int id)
+        {
+            if (id <= 0)
+            {
+                return BadRequest();
+            }
+
+            var pomodoroItem = await _pomodoroContext.Pomodoros.SingleOrDefaultAsync(p => p.Id == id);
+            if (pomodoroItem == null)
+            {
+                return NotFound();
+            }
+
+            _pomodoroContext.Pomodoros.Remove(pomodoroItem);
+            await _pomodoroContext.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }
