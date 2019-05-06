@@ -40,13 +40,17 @@ namespace Tasks.Domain.AggregatesModel.UserTasksAggregate
         public UserTask(string name)
             : this()
         {
-            Name = name;
+            Name = !string.IsNullOrEmpty(name) 
+                ? name 
+                : throw new ArgumentNullException(nameof(name));
         }
 
         public UserTask(string name, int projectId)
             : this(name)
         {
-            ProjectId = projectId;
+            ProjectId = projectId > 0 
+                ? projectId 
+                : throw new ArgumentException("The given projectId can not be less than or equal to 0.");
         }
 
 

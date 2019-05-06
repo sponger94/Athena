@@ -26,7 +26,7 @@ namespace Tasks.UnitTests.Application.Commands
         }
 
         [Fact]
-        public async void Handle_GetAsyncReturnNull_ReturnsFalse()
+        public async void Handle_GetAsyncNullResult_ReturnsFalse()
         {
             //Arrange
             var fakeId = 15;
