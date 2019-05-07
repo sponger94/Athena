@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
-namespace Athena.Pomodoro.API
+namespace Athena.Pomodoros.API
 {
     public class Program
     {

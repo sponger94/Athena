@@ -1,11 +1,11 @@
-﻿using Athena.Pomodoro.API.ViewModel;
+﻿using Athena.Pomodoros.API.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 
-namespace Athena.Pomodoro.API.Infrastructure.Repositories
+namespace Athena.Pomodoros.API.Infrastructure.Repositories
 {
     public interface IPomodoroRepository
     {

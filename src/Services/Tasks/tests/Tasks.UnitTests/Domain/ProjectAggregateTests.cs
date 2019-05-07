@@ -9,9 +9,7 @@ namespace Tasks.UnitTests.Domain
     public class ProjectAggregateTests
     {
         public ProjectAggregateTests()
-        {
-
-        }
+        { }
 
         #region Constructor Tests
 

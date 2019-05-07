@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Athena.Pomodoro.API.Infrastructure.Exceptions
+namespace Athena.Pomodoros.API.Infrastructure.Exceptions
 {
     public class PomodoroDomainException : Exception
     {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Athena.Pomodoro.API.Controllers
+namespace Athena.Pomodoros.API.Controllers
 {
     public class HomeController : Controller
     {

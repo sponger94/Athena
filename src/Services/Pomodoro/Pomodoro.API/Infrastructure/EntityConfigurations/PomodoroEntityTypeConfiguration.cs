@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Athena.Pomodoro.API.Model;
+using Athena.Pomodoros.API.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Athena.Pomodoro.API.Infrastructure.EntityConfigurations
+namespace Athena.Pomodoros.API.Infrastructure.EntityConfigurations
 {
     public class PomodoroEntityTypeConfiguration : IEntityTypeConfiguration<Model.Pomodoro>
     {

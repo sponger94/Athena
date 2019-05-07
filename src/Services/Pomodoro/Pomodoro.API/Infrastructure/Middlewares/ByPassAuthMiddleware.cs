@@ -5,7 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace Athena.Pomodoro.API.Infrastructure.Middlewares
+namespace Athena.Pomodoros.API.Infrastructure.Middlewares
 {
     public class ByPassAuthMiddleware
     {

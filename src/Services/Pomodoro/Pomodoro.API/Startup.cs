@@ -1,6 +1,6 @@
 ﻿using Athena.BuildingBlocks.EventBusRabbitMQ;
-using Athena.Pomodoro.API.Infrastructure.Filters;
-using Athena.Pomodoro.API.Infrastructure.Services;
+using Athena.Pomodoros.API.Infrastructure.Filters;
+using Athena.Pomodoros.API.Infrastructure.Services;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
@@ -17,13 +17,13 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using Athena.BuildingBlocks.EventBus;
 using Athena.BuildingBlocks.EventBus.Abstractions;
-using Athena.Pomodoro.API.Infrastructure.Middlewares;
+using Athena.Pomodoros.API.Infrastructure.Middlewares;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
-namespace Athena.Pomodoro.API
+namespace Athena.Pomodoros.API
 {
     public class Startup
     {

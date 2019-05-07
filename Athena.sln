@@ -31,7 +31,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationEventLogEF", "sr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pomodoro", "Pomodoro", "{651C5FA4-5B68-409C-8309-1E55D4B76778}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodoro.API", "src\Services\Pomodoro\Pomodoro.API\Pomodoro.API.csproj", "{BC8BD149-E1C2-43B3-A82D-BDB37DA9AD61}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodoros.API", "src\Services\Pomodoro\Pomodoro.API\Pomodoros.API.csproj", "{BC8BD149-E1C2-43B3-A82D-BDB37DA9AD61}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{9957DD9D-854D-46B1-B14D-161E44D71C4A}"
 EndProject

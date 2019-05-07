@@ -6,8 +6,8 @@ using Athena.BuildingBlocks.EventBus.Events;
 using Athena.BuildingBlocks.IntegrationEventLogEF;
 using Athena.BuildingBlocks.IntegrationEventLogEF.Services;
 using Athena.BuildingBlocks.IntegrationEventLogEF.Utilities;
-using Athena.Pomodoro.API.Infrastructure;
-using Athena.Pomodoro.API.IntegrationEvents;
+using Athena.Pomodoros.API.Infrastructure;
+using Athena.Pomodoros.API.IntegrationEvents;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Athena.Pomodoro.API.Model
+namespace Athena.Pomodoros.API.Model
 {
     public class Pomodoro
     {

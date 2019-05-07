@@ -1,4 +1,4 @@
-﻿namespace Athena.Pomodoro.API
+﻿namespace Athena.Pomodoros.API
 {
     public class PomodoroSettings
     {

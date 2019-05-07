@@ -1,6 +1,6 @@
-﻿using Athena.Pomodoro.API.Infrastructure.Repositories;
-using Athena.Pomodoro.API.IntegrationEvents;
-using Athena.Pomodoro.API.ViewModel;
+﻿using Athena.Pomodoros.API.Infrastructure.Repositories;
+using Athena.Pomodoros.API.IntegrationEvents;
+using Athena.Pomodoros.API.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System;
@@ -9,13 +9,12 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace Athena.Pomodoro.API.Controllers
+namespace Athena.Pomodoros.API.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
     public class PomodoroController : ControllerBase
     {
-        //private readonly PomodoroContext _pomodoroContext;
         private readonly IPomodoroRepository _pomodoroRepository;
         private readonly PomodoroSettings _settings;
         private readonly IPomodoroIntegrationEventService _pomodoroIntegrationEventService;

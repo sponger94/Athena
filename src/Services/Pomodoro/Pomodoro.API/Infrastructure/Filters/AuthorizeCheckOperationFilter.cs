@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace Athena.Pomodoro.API.Infrastructure.Filters
+namespace Athena.Pomodoros.API.Infrastructure.Filters
 {
     internal class AuthorizeCheckOperationFilter : IOperationFilter
     {

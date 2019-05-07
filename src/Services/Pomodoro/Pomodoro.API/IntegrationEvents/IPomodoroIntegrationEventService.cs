@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Athena.BuildingBlocks.EventBus.Events;
 
-namespace Athena.Pomodoro.API.IntegrationEvents
+namespace Athena.Pomodoros.API.IntegrationEvents
 {
     public interface IPomodoroIntegrationEventService
     {

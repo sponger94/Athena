@@ -1,8 +1,8 @@
-﻿using Athena.Pomodoro.API.Infrastructure.EntityConfigurations;
+﻿using Athena.Pomodoros.API.Infrastructure.EntityConfigurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
-namespace Athena.Pomodoro.API.Infrastructure
+namespace Athena.Pomodoros.API.Infrastructure
 {
     public class PomodoroContext : DbContext
     {

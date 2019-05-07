@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Athena.Pomodoro.API.ViewModel
+namespace Athena.Pomodoros.API.ViewModel
 {
     public class PaginatedItemsViewModel<TEntity> where TEntity : class 
     {
