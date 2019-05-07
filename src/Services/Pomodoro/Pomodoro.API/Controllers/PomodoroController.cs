@@ -1,8 +1,7 @@
-﻿using Athena.Pomodoro.API.Infrastructure;
+﻿using Athena.Pomodoro.API.Infrastructure.Repositories;
 using Athena.Pomodoro.API.IntegrationEvents;
 using Athena.Pomodoro.API.ViewModel;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -16,19 +15,18 @@ namespace Athena.Pomodoro.API.Controllers
     [ApiController]
     public class PomodoroController : ControllerBase
     {
-        private readonly PomodoroContext _pomodoroContext;
+        //private readonly PomodoroContext _pomodoroContext;
+        private readonly IPomodoroRepository _pomodoroRepository;
         private readonly PomodoroSettings _settings;
         private readonly IPomodoroIntegrationEventService _pomodoroIntegrationEventService;
 
-        public PomodoroController(PomodoroContext context,
+        public PomodoroController(IPomodoroRepository pomodoroRepository,
             IOptionsSnapshot<PomodoroSettings> settings,
             IPomodoroIntegrationEventService pomodoroIntegrationEventService)
         {
-            _pomodoroContext = context ?? throw new ArgumentNullException(nameof(context));
+            _pomodoroRepository = pomodoroRepository ?? throw new ArgumentNullException(nameof(pomodoroRepository));
             _pomodoroIntegrationEventService = pomodoroIntegrationEventService ?? throw new ArgumentNullException(nameof(settings));
             _settings = settings.Value;
-
-            context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
         //GET api/v1/[controller]/items[?pageSize=7&pageIndex=21]
@@ -42,7 +40,7 @@ namespace Athena.Pomodoro.API.Controllers
         {
             if (!string.IsNullOrEmpty(ids))
             {
-                var items = await GetItemsByIdsAsync(ids);
+                var items = await _pomodoroRepository.GetItemsByIdsAsync(ids);
 
                 if (!items.Any())
                 {
@@ -52,17 +50,7 @@ namespace Athena.Pomodoro.API.Controllers
                 return Ok(items);
             }
 
-            var totalItems = await _pomodoroContext.Pomodoros
-                .LongCountAsync();
-
-            var itemsOnPage = await _pomodoroContext.Pomodoros
-                .OrderBy(p => p.Time)
-                .Skip(pageSize * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-
-            var model = new PaginatedItemsViewModel<Model.Pomodoro>(pageIndex, pageSize, totalItems, itemsOnPage);
-
+            var model = await _pomodoroRepository.GetPomodoroItemsAsync(pageIndex, pageSize);
             return Ok(model);
         }
 
@@ -77,7 +65,7 @@ namespace Athena.Pomodoro.API.Controllers
             if (id <= 0)
                 return BadRequest();
 
-            var item = await _pomodoroContext.Pomodoros.SingleOrDefaultAsync(p => p.Id == id);
+            var item = await _pomodoroRepository.GetItemByIdAsync(id);
 
             if (item != null)
             {
@@ -85,20 +73,6 @@ namespace Athena.Pomodoro.API.Controllers
             }
 
             return NotFound();
-        }
-
-        private async Task<List<Model.Pomodoro>> GetItemsByIdsAsync(string ids)
-        {
-            var numIds = ids.Split(',').Select(id => (Ok: int.TryParse(id, out int x), Value: x));
-
-            if (!numIds.Any(nid => nid.Ok))
-            {
-                return new List<Model.Pomodoro>();
-            }
-
-            var idsToSelect = numIds.Select(id => id.Value);
-
-            return await _pomodoroContext.Pomodoros.Where(p => idsToSelect.Contains(p.Id)).ToListAsync();
         }
 
         //POST api/v1/[controller]/create
@@ -115,8 +89,7 @@ namespace Athena.Pomodoro.API.Controllers
                 Time = pomodoro.Time,
                 UserId = pomodoro.UserId
             };
-            _pomodoroContext.Add(pomodoro);
-            await _pomodoroContext.SaveChangesAsync();
+            await _pomodoroRepository.AddAsync(pomodoro);
 
             return CreatedAtAction(nameof(ItemByIdAsync), new { id = pomodoroItem.Id }, null);
         }
@@ -134,15 +107,13 @@ namespace Athena.Pomodoro.API.Controllers
                 return BadRequest();
             }
 
-            var pomodoroItem = await _pomodoroContext.Pomodoros.SingleOrDefaultAsync(p => p.Id == id);
+            var pomodoroItem = await _pomodoroRepository.GetItemByIdAsync(id);
             if (pomodoroItem == null)
             {
                 return NotFound();
             }
 
-            _pomodoroContext.Pomodoros.Remove(pomodoroItem);
-            await _pomodoroContext.SaveChangesAsync();
-
+            await _pomodoroRepository.RemoveAsync(pomodoroItem);
             return NoContent();
         }
     }
