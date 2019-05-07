@@ -241,7 +241,7 @@ namespace Athena.Pomodoro.API
 
         private void ConfigureEventBus(IApplicationBuilder app)
         {
-            var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
+            //var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
 
             //TODO: Subscribe integration event handlers
             //eventBus.Subscribe<>();
