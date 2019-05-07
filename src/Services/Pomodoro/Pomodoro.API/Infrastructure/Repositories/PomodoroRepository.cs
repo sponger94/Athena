@@ -17,25 +17,25 @@ namespace Athena.Pomodoros.API.Infrastructure.Repositories
             _pomodoroContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
-        public async Task<Model.Pomodoro> AddAsync(Model.Pomodoro pomodoro)
+        public async Task<Pomodoro> AddAsync(Pomodoro pomodoro)
         {
             await _pomodoroContext.Pomodoros.AddAsync(pomodoro);
             await _pomodoroContext.SaveChangesAsync();
             return pomodoro;
         }
 
-        public async Task<Model.Pomodoro> GetItemByIdAsync(int id)
+        public async Task<Pomodoro> GetItemByIdAsync(int id)
         {
             return await _pomodoroContext.Pomodoros.SingleOrDefaultAsync(p => p.Id == id);
         }
 
-        public async Task<IEnumerable<Model.Pomodoro>> GetItemsByIdsAsync(string ids)
+        public async Task<IEnumerable<Pomodoro>> GetItemsByIdsAsync(string ids)
         {
             var numIds = ids.Split(',').Select(id => (Ok: int.TryParse(id, out int x), Value: x));
 
             if (!numIds.Any(nid => nid.Ok))
             {
-                return new List<Model.Pomodoro>();
+                return new List<Pomodoro>();
             }
 
             var idsToSelect = numIds.Select(id => id.Value);
@@ -43,7 +43,7 @@ namespace Athena.Pomodoros.API.Infrastructure.Repositories
             return await _pomodoroContext.Pomodoros.Where(p => idsToSelect.Contains(p.Id)).ToListAsync();
         }
 
-        public async Task<PaginatedItemsViewModel<Model.Pomodoro>> GetPomodoroItemsAsync(int pageIndex, int pageSize)
+        public async Task<PaginatedItemsViewModel<Pomodoro>> GetPomodoroItemsAsync(int pageIndex, int pageSize)
         {
             var totalItems = await _pomodoroContext.Pomodoros
                 .LongCountAsync();
@@ -54,10 +54,10 @@ namespace Athena.Pomodoros.API.Infrastructure.Repositories
                 .Take(pageSize)
                 .ToListAsync();
 
-            return new PaginatedItemsViewModel<Model.Pomodoro>(pageIndex, pageSize, totalItems, itemsOnPage);
+            return new PaginatedItemsViewModel<Pomodoro>(pageIndex, pageSize, totalItems, itemsOnPage);
         }
 
-        public async Task RemoveAsync(Model.Pomodoro pomodoro)
+        public async Task RemoveAsync(Pomodoro pomodoro)
         {
             _pomodoroContext.Pomodoros.Remove(pomodoro);
             await _pomodoroContext.SaveChangesAsync();

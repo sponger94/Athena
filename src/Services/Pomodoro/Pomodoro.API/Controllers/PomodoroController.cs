@@ -1,5 +1,6 @@
 ﻿using Athena.Pomodoros.API.Infrastructure.Repositories;
 using Athena.Pomodoros.API.IntegrationEvents;
+using Athena.Pomodoros.API.Model;
 using Athena.Pomodoros.API.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -31,8 +32,8 @@ namespace Athena.Pomodoros.API.Controllers
         //GET api/v1/[controller]/items[?pageSize=7&pageIndex=21]
         [HttpGet]
         [Route("items")]
-        [ProducesResponseType(typeof(PaginatedItemsViewModel<Model.Pomodoro>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(IEnumerable<Model.Pomodoro>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(PaginatedItemsViewModel<Pomodoro>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<Pomodoro>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> ItemsAsync([FromQuery] int pageSize = 10, [FromQuery] int pageIndex = 0,
             string ids = null)
@@ -58,8 +59,8 @@ namespace Athena.Pomodoros.API.Controllers
         [Route("items/{id:int}")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType(typeof(Model.Pomodoro), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<Model.Pomodoro>> ItemByIdAsync(int id)
+        [ProducesResponseType(typeof(Pomodoro), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<Pomodoro>> ItemByIdAsync(int id)
         {
             if (id <= 0)
                 return BadRequest();
@@ -78,9 +79,9 @@ namespace Athena.Pomodoros.API.Controllers
         [HttpPost]
         [Route("create")]
         [ProducesResponseType((int)HttpStatusCode.Created)]
-        public async Task<IActionResult> FinishPomodoroAsync([FromBody] Model.Pomodoro pomodoro)
+        public async Task<IActionResult> FinishPomodoroAsync([FromBody] Pomodoro pomodoro)
         {
-            var pomodoroItem = new Model.Pomodoro
+            var pomodoroItem = new Pomodoro
             {
                 ProjectId = pomodoro.ProjectId,
                 ProjectName = pomodoro.ProjectName,

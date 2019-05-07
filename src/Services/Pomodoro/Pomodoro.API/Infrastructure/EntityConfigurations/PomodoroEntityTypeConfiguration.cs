@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Athena.Pomodoros.API.Model;
+﻿using Athena.Pomodoros.API.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Athena.Pomodoros.API.Infrastructure.EntityConfigurations
 {
-    public class PomodoroEntityTypeConfiguration : IEntityTypeConfiguration<Model.Pomodoro>
+    public class PomodoroEntityTypeConfiguration : IEntityTypeConfiguration<Pomodoro>
     {
-        public void Configure(EntityTypeBuilder<Model.Pomodoro> builder)
+        public void Configure(EntityTypeBuilder<Pomodoro> builder)
         {
             builder.ToTable("pomodoros");
 

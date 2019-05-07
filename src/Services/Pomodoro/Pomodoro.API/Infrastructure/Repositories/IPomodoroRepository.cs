@@ -1,4 +1,5 @@
-﻿using Athena.Pomodoros.API.ViewModel;
+﻿using Athena.Pomodoros.API.Model;
+using Athena.Pomodoros.API.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,10 @@ namespace Athena.Pomodoros.API.Infrastructure.Repositories
 {
     public interface IPomodoroRepository
     {
-        Task<Model.Pomodoro> AddAsync(Model.Pomodoro pomodoro);
-        Task<Model.Pomodoro> GetItemByIdAsync(int id);
-        Task<IEnumerable<Model.Pomodoro>> GetItemsByIdsAsync(string ids);
-        Task<PaginatedItemsViewModel<Model.Pomodoro>> GetPomodoroItemsAsync(int pageIndex, int pageSize);
-        Task RemoveAsync(Model.Pomodoro pomodoro);
+        Task<Pomodoro> AddAsync(Pomodoro pomodoro);
+        Task<Pomodoro> GetItemByIdAsync(int id);
+        Task<IEnumerable<Pomodoro>> GetItemsByIdsAsync(string ids);
+        Task<PaginatedItemsViewModel<Pomodoro>> GetPomodoroItemsAsync(int pageIndex, int pageSize);
+        Task RemoveAsync(Pomodoro pomodoro);
     }
 }
