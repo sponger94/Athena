@@ -63,9 +63,12 @@ namespace Pomodoros.UnitTests
                 pageIndex,
                 pageSize,
                 count,
-                
+
                 fakeItems);
         }
+
+
+        #region ItemsAsyncTests
 
         [Fact]
         public async void ItemsAsync_IdsStringNull_ReturnsPaginatedListOfAllItems()
@@ -96,10 +99,63 @@ namespace Pomodoros.UnitTests
             var objectResult = Assert.IsType<OkObjectResult>(actionResult);
             var model = Assert.IsAssignableFrom<PaginatedItemsViewModel<Pomodoro>>(objectResult.Value);
 
-            _pomodoroRepositoryMock.Verify(p => p.GetItemsByIdsAsync(It.IsAny<string>()), Times.Never());
+            _pomodoroRepositoryMock.Verify(p => p.GetItemsByIdsAsync(It.IsAny<string>()), Times.Never);
             Assert.Equal(expectedCurrentPage, model.PageIndex);
             Assert.Equal(expectedPageSize, model.PageSize);
             Assert.Equal(expectedTotalItems, model.Count);
         }
+
+        [Fact]
+        public async void ItemsAsync_IdsStringIsNotNullAndGetItemsEmpty_ReturnsBadRequest()
+        {
+            //Arrange
+            var fakePage = 2;
+            var fakePageSize = 10;
+            var fakeIds = "1,2,3,5,18";
+
+            IEnumerable<Pomodoro> fakeResult = new List<Pomodoro>();
+            _pomodoroRepositoryMock.Setup(p => p.GetItemsByIdsAsync(It.IsAny<string>()))
+                .Returns(Task.FromResult(fakeResult));
+
+            //Act
+            var pomodoroController = new PomodoroController(_pomodoroRepositoryMock.Object,
+                _settingsMock.Object,
+                _pomodoroIntegrationMock.Object);
+            var actionResult = await pomodoroController.ItemsAsync(fakePageSize, fakePage, fakeIds);
+
+            //Assert
+            _pomodoroRepositoryMock.Verify(p => p.GetPomodoroItemsAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+            Assert.IsType<BadRequestObjectResult>(actionResult);
+        }
+
+        [Fact]
+        public async void ItemsAsync_IdsStringIsNotNullAndGetItemsContainsElements_ReturnsRequestedItems()
+        {
+            //Arrange
+            var fakePage = 2;
+            var fakePageSize = 10;
+            var fakeTotalItems = 50;
+            var fakeIds = "1,2,3,5,18";
+            var fakeItems = GetFakeItems(fakePage, fakePageSize, fakeTotalItems);
+
+            _pomodoroRepositoryMock.Setup(p => p.GetItemsByIdsAsync
+            (
+                It.Is<string>(x => x == fakeIds)
+            )).Returns(Task.FromResult(fakeItems.Data));
+
+            //Act
+            var pomodoroController = new PomodoroController(
+                _pomodoroRepositoryMock.Object,
+                _settingsMock.Object,
+                _pomodoroIntegrationMock.Object);
+            var actionResult = await pomodoroController.ItemsAsync(fakePageSize, fakePage, fakeIds);
+
+            //Assert
+            _pomodoroRepositoryMock.Verify(p => p.GetPomodoroItemsAsync(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
+            var objectResult = Assert.IsType<OkObjectResult>(actionResult);
+            Assert.IsAssignableFrom<IEnumerable<Pomodoro>>(objectResult.Value);
+        }
+
+        #endregion
     }
 }
