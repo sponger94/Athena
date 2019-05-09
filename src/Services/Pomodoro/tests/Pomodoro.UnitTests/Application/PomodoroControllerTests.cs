@@ -240,5 +240,68 @@ namespace Pomodoros.UnitTests
         }
 
         #endregion
+
+        #region DeletePomodoroAsyncTests
+
+        [Fact]
+        public async void DeletePomodoroAsync_IdIsEqualToZero_ReturnsBadRequest()
+        {
+            //Arrange
+            var fakeId = 0;
+
+            //Act
+            var pomodoroContoller =new PomodoroController(_pomodoroRepositoryMock.Object,
+                _settingsMock.Object,
+                _pomodoroIntegrationMock.Object);
+            var actionResult = await pomodoroContoller.DeletePomodoroAsync(fakeId);
+
+            //Assert
+            _pomodoroRepositoryMock.Verify(p => p.GetItemByIdAsync(fakeId), Times.Never);
+            _pomodoroRepositoryMock.Verify(p => p.RemoveAsync(It.IsAny<Pomodoro>()), Times.Never);
+            Assert.IsType<BadRequestResult>(actionResult);
+        }
+
+        [Fact]
+        public async void DeletePomodoroAsync_IdIsGreaterThanZeroAndItemIsNull_ReturnsNotFound()
+        {
+            //Arrange
+            var fakeId = 15;
+            _pomodoroRepositoryMock.Setup(p => p.GetItemByIdAsync(fakeId))
+                .Returns(Task.FromResult<Pomodoro>(null));
+
+            //Act
+            var pomodoroContoller = new PomodoroController(_pomodoroRepositoryMock.Object,
+                _settingsMock.Object,
+                _pomodoroIntegrationMock.Object);
+            var actionResult = await pomodoroContoller.DeletePomodoroAsync(fakeId);
+
+            //Assert
+            _pomodoroRepositoryMock.Verify(p => p.GetItemByIdAsync(fakeId), Times.Once);
+            _pomodoroRepositoryMock.Verify(p => p.RemoveAsync(It.IsAny<Pomodoro>()), Times.Never);
+            Assert.IsType<NotFoundResult>(actionResult);
+        }
+
+        [Fact]
+        public async void DeletePomodoroAsync_IdIsGreaterThanZeroAndItemIsNotNull_ReturnsNoContent()
+        {
+            //Arrange
+            var fakeId = 15;
+            var fakePomodoro = new Pomodoro();
+            _pomodoroRepositoryMock.Setup(p => p.GetItemByIdAsync(fakeId))
+                .Returns(Task.FromResult(fakePomodoro));
+
+            //Act
+            var pomodoroContoller = new PomodoroController(_pomodoroRepositoryMock.Object,
+                _settingsMock.Object,
+                _pomodoroIntegrationMock.Object);
+            var actionResult = await pomodoroContoller.DeletePomodoroAsync(fakeId);
+
+            //Assert
+            _pomodoroRepositoryMock.Verify(p => p.GetItemByIdAsync(fakeId), Times.Once);
+            _pomodoroRepositoryMock.Verify(p => p.RemoveAsync(fakePomodoro), Times.Once);
+            Assert.IsType<NoContentResult>(actionResult);
+        }
+
+        #endregion
     }
 }
