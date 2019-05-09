@@ -22,6 +22,11 @@ using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using FluentValidation.AspNetCore;
+using FluentValidation;
+using Athena.Pomodoros.API.Model;
+using Athena.Pomodoros.API.Validations;
+using System.Linq;
 
 namespace Athena.Pomodoros.API
 {
@@ -41,7 +46,8 @@ namespace Athena.Pomodoros.API
 
             services.AddMvc(options => options.Filters.Add(typeof(HttpGlobalExceptionFilter)))
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                .AddControllersAsServices();
+                .AddControllersAsServices()
+                .AddFluentValidation();
 
             ConfigureAuthService(services);
 
@@ -118,10 +124,27 @@ namespace Athena.Pomodoros.API
                         .AllowCredentials());
             });
 
+            services.AddSingleton<IValidator<Pomodoro>, PomodoroValidator>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<IIdentityService, IdentityService>();
 
             services.AddOptions();
+
+            //Fluent validations
+            services.Configure<ApiBehaviorOptions>(options => 
+            {
+                options.InvalidModelStateResponseFactory = (context) =>
+                {
+                    var errors = context.ModelState.Values.SelectMany(m => m.Errors.SelectMany(ec => ec.ErrorMessage);
+                    var result = new
+                    {
+                        Code = "00009",
+                        Message = "Validation errors",
+                        Errors = errors
+                    };
+                    return new BadRequestObjectResult(result);
+                };
+            });
 
             var container = new ContainerBuilder();
             container.Populate(services);
