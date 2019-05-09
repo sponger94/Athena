@@ -11,6 +11,7 @@ using Athena.Pomodoros.API.Controllers;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Pomodoros.UnitTests
 {
@@ -219,6 +220,25 @@ namespace Pomodoros.UnitTests
 
         #endregion
 
+        #region FinishPomodoroAsyncTests
 
+        [Fact]
+        public async void FinishPomodoroAsync_ReturnsCreatedAtAction()
+        {
+            //Arrange
+            var fakePomodoro = GetFakeItems(5, 10, 50).Data.First();
+
+            //Act
+            var pomodoroController = new PomodoroController(_pomodoroRepositoryMock.Object,
+                _settingsMock.Object,
+                _pomodoroIntegrationMock.Object);
+            var actionResult = await pomodoroController.FinishPomodoroAsync(fakePomodoro);
+
+            //Assert
+            _pomodoroRepositoryMock.Verify(p => p.AddAsync(fakePomodoro), Times.Once);
+            Assert.IsType<CreatedAtActionResult>(actionResult);
+        }
+
+        #endregion
     }
 }

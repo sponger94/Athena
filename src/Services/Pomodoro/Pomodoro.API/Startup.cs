@@ -44,10 +44,16 @@ namespace Athena.Pomodoros.API
         {
             RegisterAppInsights(services);
 
-            services.AddMvc(options => options.Filters.Add(typeof(HttpGlobalExceptionFilter)))
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                .AddControllersAsServices()
-                .AddFluentValidation();
+            services.AddMvc(options =>
+            {
+                options.Filters.Add(typeof(HttpGlobalExceptionFilter));
+            })
+            .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+            .AddControllersAsServices()
+            .AddFluentValidation(fv =>
+            {
+                fv.RegisterValidatorsFromAssemblyContaining<Startup>();
+            });
 
             ConfigureAuthService(services);
 
@@ -111,7 +117,7 @@ namespace Athena.Pomodoros.API
                 });
 
                 options.OperationFilter<AuthorizeCheckOperationFilter>();
-
+                options.AddFluentValidationRules();
             });
 
             services.AddCors(options =>
@@ -131,11 +137,11 @@ namespace Athena.Pomodoros.API
             services.AddOptions();
 
             //Fluent validations
-            services.Configure<ApiBehaviorOptions>(options => 
+            services.Configure<ApiBehaviorOptions>(options =>
             {
                 options.InvalidModelStateResponseFactory = (context) =>
                 {
-                    var errors = context.ModelState.Values.SelectMany(m => m.Errors.SelectMany(ec => ec.ErrorMessage);
+                    var errors = context.ModelState.Values.SelectMany(m => m.Errors.SelectMany(ec => ec.ErrorMessage));
                     var result = new
                     {
                         Code = "00009",
@@ -257,7 +263,7 @@ namespace Athena.Pomodoros.API
             });
 
             services.AddSingleton<IEventBusSubscriptionsManager, InMemoryEventBusSubscriptionsManager>();
-            
+
             //TODO: Add integration event handlers
             //services.AddTransient<>()
         }
@@ -283,7 +289,7 @@ namespace Athena.Pomodoros.API
                 .AddSqlServer(
                     configuration["ConnectionString"],
                     name: "PomodoroDB-check",
-                    tags: new[] {"pomodorodb"})
+                    tags: new[] { "pomodorodb" })
                 .AddRabbitMQ(
                     $"amqp://{configuration["EventBusConnection"]}",
                     name: "basket-rabbitmqbus-check",
