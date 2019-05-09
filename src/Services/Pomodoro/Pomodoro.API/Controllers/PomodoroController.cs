@@ -60,7 +60,7 @@ namespace Athena.Pomodoros.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(Pomodoro), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<Pomodoro>> ItemByIdAsync(int id)
+        public async Task<IActionResult> ItemByIdAsync(int id)
         {
             if (id <= 0)
                 return BadRequest();
@@ -69,7 +69,7 @@ namespace Athena.Pomodoros.API.Controllers
 
             if (item != null)
             {
-                return item;
+                return Ok(item);
             }
 
             return NotFound();
@@ -90,7 +90,6 @@ namespace Athena.Pomodoros.API.Controllers
                 UserId = pomodoro.UserId
             };
             await _pomodoroRepository.AddAsync(pomodoro);
-
             return CreatedAtAction(nameof(ItemByIdAsync), new { id = pomodoroItem.Id }, null);
         }
 

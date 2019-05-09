@@ -129,7 +129,7 @@ namespace Pomodoros.UnitTests
         }
 
         [Fact]
-        public async void ItemsAsync_IdsStringIsNotNullAndGetItemsContainsElements_ReturnsRequestedItems()
+        public async void ItemsAsync_IdsStringIsNotNullAndGetItemsHasItems_ReturnsRequestedItems()
         {
             //Arrange
             var fakePage = 2;
@@ -157,5 +157,68 @@ namespace Pomodoros.UnitTests
         }
 
         #endregion
+
+        #region ItemByIdAsyncTests
+
+        [Fact]
+        public async void ItemByIdAsync_IdEqualsZero_ReturnsBadRequest()
+        {
+            //Arrange
+            var fakeId = 0;
+
+            //Act
+            var pomodoroController = new PomodoroController(_pomodoroRepositoryMock.Object,
+                _settingsMock.Object,
+                _pomodoroIntegrationMock.Object);
+            var actionResult = await pomodoroController.ItemByIdAsync(fakeId);
+
+            //Assert
+            _pomodoroRepositoryMock.Verify(p => p.GetItemByIdAsync(fakeId), Times.Never);
+            Assert.IsType<BadRequestResult>(actionResult);
+        }
+
+        [Fact]
+        public async void ItemByIdAsync_IdIsGreaterThanZeroAndItemIsNull_ReturnsNotFound()
+        {
+            //Arrange
+            var fakeId = 15;
+            _pomodoroRepositoryMock.Setup(p => p.GetItemByIdAsync(It.Is<int>(i => i == fakeId)))
+                .Returns(Task.FromResult<Pomodoro>(null));
+
+            //Act
+            var pomodoroController = new PomodoroController(_pomodoroRepositoryMock.Object,
+               _settingsMock.Object,
+               _pomodoroIntegrationMock.Object);
+            var actionResult = await pomodoroController.ItemByIdAsync(fakeId);
+
+            //Assert
+            _pomodoroRepositoryMock.Verify(p => p.GetItemByIdAsync(fakeId), Times.Once);
+            Assert.IsType<NotFoundResult>(actionResult);
+        }
+
+        [Fact]
+        public async void ItemByIdAsync_IdIsGreaterThanZeroAndItemIsNotNull_ReturnsPomodoroItem()
+        {
+            //Arrange
+            var fakeId = 15;
+            var fakePomodoroItem = new Pomodoro();
+            _pomodoroRepositoryMock.Setup(p => p.GetItemByIdAsync(It.Is<int>(i => i == fakeId)))
+                .Returns(Task.FromResult(fakePomodoroItem));
+
+            //Act
+            var pomodoroController = new PomodoroController(_pomodoroRepositoryMock.Object,
+               _settingsMock.Object,
+               _pomodoroIntegrationMock.Object);
+            var actionResult = await pomodoroController.ItemByIdAsync(fakeId);
+
+            //Assert
+            _pomodoroRepositoryMock.Verify(p => p.GetItemByIdAsync(fakeId), Times.Once);
+            var objectResult = Assert.IsType<OkObjectResult>(actionResult);
+            Assert.IsAssignableFrom<Pomodoro>(objectResult.Value);
+        }
+
+        #endregion
+
+
     }
 }
