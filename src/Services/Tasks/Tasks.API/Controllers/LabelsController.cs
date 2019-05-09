@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Tasks.API.Application.Commands.Label;
 using Tasks.API.Application.Queries;
 using Tasks.API.Extensions;
-using Tasks.API.Services;
 
 namespace Tasks.API.Controllers
 {
@@ -36,7 +35,7 @@ namespace Tasks.API.Controllers
             return Ok(labels);
         }
 
-        //GET api/v1/[controller]
+        //GET api/v1/[controller]/labels/5
         [HttpGet]
         [Route("{labelId:int}")]
         [ProducesResponseType(typeof(IEnumerable<Label>), (int)HttpStatusCode.OK)]
@@ -46,6 +45,7 @@ namespace Tasks.API.Controllers
             return Ok(labels);
         }
 
+        //POST api/v1/[controller]/create
         [HttpPost]
         [Route("create")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
@@ -55,6 +55,7 @@ namespace Tasks.API.Controllers
             return await this.RequestExecutionResultAsync(_mediator, createLabelCommand);
         }
 
+        //DELETE api/v1/[controller]/delete
         [HttpDelete]
         [Route("delete")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
@@ -64,6 +65,7 @@ namespace Tasks.API.Controllers
             return await this.RequestExecutionResultAsync(_mediator, removeLabelCommand);
         }
 
+        //PUT api/v1/[controller]/update
         [HttpPut]
         [Route("update")]
         [ProducesResponseType((int)HttpStatusCode.OK)]

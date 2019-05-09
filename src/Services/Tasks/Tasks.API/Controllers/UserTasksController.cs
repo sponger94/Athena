@@ -28,6 +28,7 @@ namespace Tasks.API.Controllers
             _taskQueries = taskQueries ?? throw new ArgumentNullException(nameof(taskQueries));
         }
 
+        //GET api/v1/[controller]/5
         [HttpGet]
         [Route("{userTaskId:int}")]
         [ProducesResponseType(typeof(UserTask), (int)HttpStatusCode.OK)]

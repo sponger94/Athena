@@ -43,6 +43,7 @@ namespace Tasks.API.Controllers
             return Ok(projectUserTasks);
         }
 
+        //POST api/v1/[controller]/create
         [HttpPost]
         [Route("create")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
@@ -52,6 +53,7 @@ namespace Tasks.API.Controllers
             return await this.RequestExecutionResultAsync(_mediator, createProjectCommand);
         }
 
+        //DELETE api/v1/[controller]/delete
         [HttpDelete]
         [Route("delete")]
         [ProducesResponseType((int) HttpStatusCode.OK)]
@@ -61,6 +63,7 @@ namespace Tasks.API.Controllers
             return await this.RequestExecutionResultAsync(_mediator, removeProjectCommand);
         }
 
+        //PUT api/v1/[controller]/update
         [HttpPut]
         [Route("update")]
         [ProducesResponseType((int) HttpStatusCode.OK)]
