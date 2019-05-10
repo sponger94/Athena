@@ -76,4 +76,4 @@ From <https://swagger.io/docs/specification/about/>
 
 ## Licence
 
-Code released under TODO: [the MIT license](https://github.com/sponger94/Athena/blob/develop/LICENSE).
+Code released under the [MIT license](https://github.com/sponger94/Athena/blob/develop/LICENSE).
