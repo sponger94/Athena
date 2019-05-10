@@ -39,7 +39,7 @@ From <https://swagger.io/docs/specification/about/>
 
 |  No. |  Service |  Description | OpenAPI  | Build Status |
 | ------------ | ------------ | ------------ | ------------ | ------------ |
-|  1 | Tasks  | Manages user tasks, labels, attachments etc. Follows DDD / CQRS architecture. | [View](http://https://petstore.swagger.io/?url=https://raw.githubusercontent.com/sponger94/Athena/develop/src/Services/Tasks/Tasks.API/api-docs/v1/swagger.json "View") | [WIP] Status |
+|  1 | Tasks  | Manages user tasks, labels, attachments etc. Follows DDD / CQRS architecture. | [View](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/sponger94/Athena/develop/src/Services/Tasks/Tasks.API/api-docs/v1/swagger.json "View") | [WIP] Status |
 |  2 | Pomodoro  | Serves for tracking user pomodoro's(towards which task, duration and date)  |  [View](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/sponger94/Athena/develop/src/Services/Pomodoro/Pomodoro.API/api-docs/v1/swagger.json) | [WIP] Status  |
 |  3 | Statistics (Soon)  | Runs for keeping statistics and analytics of users activity. | Soon  | [WIP] Status  |
 |  4 | Identity Server4 (Soon)  | Stands for user authorization and user roles. | Soon  | [WIP] Status  |
