@@ -6,11 +6,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="api-docs\**" />
+    <Content Remove="api-docs\**" />
+    <EmbeddedResource Remove="api-docs\**" />
+    <None Remove="api-docs\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.4.0" />
     <PackageReference Include="Dapper" Version="1.60.6" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Cli" Version="4.0.1" GeneratePathProperty="true" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,5 +31,16 @@
   <ItemGroup>
     <Folder Include="Application\IntegrationEvents\EventHandling\" />
   </ItemGroup>
+
+  <Target Name="CopySwaggerCliTools" AfterTargets="Build">
+    <ItemGroup>
+      <SwashBuckleFiles Include="$(PkgSwashbuckle_AspNetCore_Cli)\lib\netcoreapp2.0\*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(SwashBuckleFiles)" DestinationFolder="$(OutDir)" />
+  </Target>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="dotnet $(OutputPath)dotnet-swagger.dll tofile --output api-docs\v1\swagger.json $(TargetPath) v1" />
+  </Target>
 
 </Project>
