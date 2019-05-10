@@ -32,7 +32,7 @@
     <Folder Include="Application\IntegrationEvents\EventHandling\" />
   </ItemGroup>
 
-  <Target Name="CopySwaggerCliTools" AfterTargets="Build">
+  <Target Name="CopySwaggerCliTools" BeforeTargets="PostBuildEvent">
     <ItemGroup>
       <SwashBuckleFiles Include="$(PkgSwashbuckle_AspNetCore_Cli)\lib\netcoreapp2.0\*.*" />
     </ItemGroup>
