@@ -22,7 +22,8 @@ Cross-platform microservices app based on .NET Core and running on Docker host. 
 > It's important to understand that CQRS and most DDD patterns (like DDD layers or a domain model with aggregates) are not architectural styles, but only architecture patterns. Microservices, SOA, and event-driven architecture (EDA) are examples of architectural styles. They describe a system of many components, such as many microservices. CQRS and DDD patterns describe something inside a single system or component; in this case, something inside a microservice. (TODO: Link to book)
 
 ### Image Description
-[WIP Architecture Image]
+
+![Architecture-01](https://user-images.githubusercontent.com/45746997/57594712-ddc9b100-755a-11e9-9478-d657d71480b9.png)
 
 ### OpenAPI
 
@@ -63,8 +64,6 @@ From <https://swagger.io/docs/specification/about/>
 ## Installation
 
 [WIP] Coming soon
-
-
 
 ## Contributing
 
