@@ -15,9 +15,9 @@ before_script:
 build:pomodoro_api:
     stage: build
     script:
-        - "curl https://img.shields.io/badge/Identity.API-failed-red.svg > build.svg"
-        - "sh build.sh pomodoro_api"
-        - "curl https://img.shields.io/badge/Identity.API-succeeded-success.svg > build.svg"
+        - curl https://img.shields.io/badge/Pomodoro.API-failed-red.svg > ../../public/badges/pomodoro_api_build.svg
+        - sh build.sh pomodoro_api
+        - curl https://img.shields.io/badge/Pomodoro.API-succeeded-success.svg > ../../public/badges/pomodoro_api_build.svg
     allow_failure: true
     artifacts:
         paths:
@@ -26,7 +26,9 @@ build:pomodoro_api:
 build:tasks_api:
     stage: build
     script:
+        - curl https://img.shields.io/badge/Tasks.API-failed-red.svg > ../../public/badges/tasks_api_build.svg
         - sh build.sh tasks_api
+        - curl https://img.shields.io/badge/Tasks.API-succeeded-success.svg > ../../public/badges/tasks_api_build.svg
 
 test:pomodoro_api:
     stage: test
@@ -40,10 +42,6 @@ test:tasks_api:
         
 pages:
   stage: deploy
-  script:
-    - mkdir .public
-    - cp -r * .public
-    - mv .public public
   artifacts:
     paths:
       - public
