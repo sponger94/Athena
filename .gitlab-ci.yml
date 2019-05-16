@@ -6,19 +6,19 @@ stages:
     - deploy
 
 before_script:
+    - echo "Creating public directory..."
     - mkdir public
-    - cd public 
-    - mkdir badges
-    - cd ../src/ci
+    - echo "Creating badges directory..."
+    - mkdir public/badges
+    - cd src/ci/
 
 build:pomodoro_api:
     stage: build
-    before_script:
-        - "curl https://img.shields.io/badge/Identity.API-failed-red.svg > build.svg"
     script:
+        - "curl https://img.shields.io/badge/Identity.API-failed-red.svg > build.svg"
         - "sh build.sh pomodoro_api"
-    after_script:
         - "curl https://img.shields.io/badge/Identity.API-succeeded-success.svg > build.svg"
+    allow_failure: true
     artifacts:
         paths:
             - public/badges/pomodoro_api_build.svg
