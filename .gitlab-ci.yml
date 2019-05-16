@@ -3,26 +3,49 @@ image: microsoft/dotnet:latest
 stages:
     - build
     - test
+    - deploy
 
 before_script:
-    - 'cd src/ci/'
- 
+    - mkdir public
+    - cd public 
+    - mkdir badges
+    - cd ../src/ci
+
 build:pomodoro_api:
     stage: build
+    before_script:
+        - "curl https://img.shields.io/badge/Identity.API-failed-red.svg > build.svg"
     script:
         - "sh build.sh pomodoro_api"
-        
+    after_script:
+        - "curl https://img.shields.io/badge/Identity.API-succeeded-success.svg > build.svg"
+    artifacts:
+        paths:
+            - public/badges/pomodoro_api_build.svg
+            
 build:tasks_api:
     stage: build
     script:
-        - "sh build.sh tasks_api"
+        - sh build.sh tasks_api
 
 test:pomodoro_api:
     stage: test
     script: 
-        - "sh test.sh pomodoro_api"
+        - sh test.sh pomodoro_api
 
 test:tasks_api:
     stage: test
     script: 
-        - "sh test.sh tasks_api"
+        - sh test.sh tasks_api
+        
+pages:
+  stage: deploy
+  script:
+    - mkdir .public
+    - cp -r * .public
+    - mv .public public
+  artifacts:
+    paths:
+      - public
+  only:
+    - develop
