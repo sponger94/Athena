@@ -42,6 +42,8 @@ test:tasks_api:
         
 pages:
   stage: deploy
+  script:
+    - echo "Deploying pages..."
   artifacts:
     paths:
       - public
