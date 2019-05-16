@@ -36,3 +36,8 @@ test:pomodoro_api:
     stage: test
     script: 
         - "sh test.sh pomodoro_api"
+
+test:tasks_api:
+    stage: test
+    script: 
+        - "sh test.sh tasks_api"
