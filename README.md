@@ -1,9 +1,11 @@
 # Athena
-[WIP] Build status
+
+[![build status](https://sponger94.gitlab.io/Athena/badges/pomodoro_api_build.svg)](https://gitlab.com/sponger94/Athena/badges/develop/pipeline.svg)
+[![build status](https://sponger94.gitlab.io/Athena/badges/tasks_api_build.svg)](https://gitlab.com/sponger94/Athena/badges/develop/pipeline.svg)
 
 ## Description
 
-This is a sample task and time management assistant made with .NET Core Microservices that follows Pomodoro Technique.
+This is a sample task and time management assistant made with .NET Core Microservices that follows Pomodoro Technique. Inspired from Microsoft's [eShopOnContainers project](https://github.com/dotnet-architecture/eShopOnContainers).
 
 ### Sample User Interface
 
@@ -25,7 +27,8 @@ This is a sample task and time management assistant made with .NET Core Microser
 
 Cross-platform microservices app based on .NET Core and running on Docker host. This app is made for sample purposes only and may not fully follow production ready code. Tasks microservice is made by using DDD / CQRS architecture only for sample purposes, however it's mostly only CRUD service. 
 
-> It's important to understand that CQRS and most DDD patterns (like DDD layers or a domain model with aggregates) are not architectural styles, but only architecture patterns. Microservices, SOA, and event-driven architecture (EDA) are examples of architectural styles. They describe a system of many components, such as many microservices. CQRS and DDD patterns describe something inside a single system or component; in this case, something inside a microservice. (TODO: Link to book)
+> It's important to understand that CQRS and most DDD patterns (like DDD layers or a domain model with aggregates) are not architectural styles, but only architecture patterns. Microservices, SOA, and event-driven architecture (EDA) are examples of architectural styles. They describe a system of many components, such as many microservices. CQRS and DDD patterns describe something inside a single system or component; in this case, something inside a microservice.
+From [this book](https://dotnet.microsoft.com/download/thank-you/microservices-architecture-ebook) page 186.
 
 ### Image Description
 
@@ -46,8 +49,8 @@ From <https://swagger.io/docs/specification/about/>
 
 |  No. |  Service |  Description | OpenAPI  | Build Status |
 | ------------ | ------------ | ------------ | ------------ | ------------ |
-|  1 | Tasks  | Manages user tasks, labels, attachments etc. Follows DDD / CQRS architecture. | [View](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/sponger94/Athena/develop/src/Services/Tasks/Tasks.API/api-docs/v1/swagger.json "View") | [WIP] Status |
-|  2 | Pomodoro  | Serves for tracking user pomodoro's(towards which task, duration and date)  |  [View](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/sponger94/Athena/develop/src/Services/Pomodoro/Pomodoro.API/api-docs/v1/swagger.json) | [WIP] Status  |
+|  1 | Tasks  | Manages user tasks, labels, attachments etc. Follows DDD / CQRS architecture. | [View](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/sponger94/Athena/develop/src/Services/Tasks/Tasks.API/api-docs/v1/swagger.json "View") | [![build status](https://sponger94.gitlab.io/Athena/badges/tasks_api_build.svg)](https://gitlab.com/sponger94/Athena/badges/develop/pipeline.svg) |
+|  2 | Pomodoro  | Serves for tracking user pomodoro's(towards which task, duration and date)  |  [View](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/sponger94/Athena/develop/src/Services/Pomodoro/Pomodoro.API/api-docs/v1/swagger.json) | [![build status](https://sponger94.gitlab.io/Athena/badges/pomodoro_api_build.svg)](https://gitlab.com/sponger94/Athena/badges/develop/pipeline.svg) |
 |  3 | Statistics (Soon)  | Runs for keeping statistics and analytics of users activity. | Soon  | [WIP] Status  |
 |  4 | Identity Server4 (Soon)  | Stands for user authorization and user roles. | Soon  | [WIP] Status  |
 |  5 | API Gateway (Soon) | Intercepts user requests and re-routes them to the corresponding microservices. | Soon  | [WIP] Status  |
@@ -62,14 +65,6 @@ From <https://swagger.io/docs/specification/about/>
 | IdentityServer4  | NUnit (Soon)  |   |
 | Dapper | NSubstitute (Soon)  |   |
 | SQL Server |   |   |   |
-
-## Prerequisites
-
-[WIP] Coming soon
-
-## Installation
-
-[WIP] Coming soon
 
 ## Contributing
 
