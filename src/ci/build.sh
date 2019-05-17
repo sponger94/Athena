@@ -17,13 +17,11 @@ main () {
 }
 
 build_pomodoro_api(){
-    cd ../Services/Pomodoro/
-    sh build.sh
+    sh src/Services/Pomodoro/build.sh
 }
 
 build_tasks_api(){
-    cd ../Services/Tasks/
-    sh build.sh
+    sh src/Services/Tasks/build.sh
 }
 
 main "$@"

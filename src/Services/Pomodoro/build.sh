@@ -1,7 +1,7 @@
 #!/bin/sh
 
 PROJECT="Pomodoro.API"
-CSPROJ="$PROJECT/Pomodoros.API.csproj"
+CSPROJ="src/Services/Pomodoro/$PROJECT/Pomodoros.API.csproj"
 
 echo "Restoring $PROJECT"
 dotnet restore "$CSPROJ"

@@ -1,7 +1,7 @@
 #!/bin/sh
 
 PROJECT="Tasks.API"
-CSPROJ="tests/Tasks.UnitTests/Tasks.UnitTests.csproj"
+CSPROJ="src/Services/Tasks/tests/Tasks.UnitTests/Tasks.UnitTests.csproj"
 
 echo "Restoring $PROJECT"
 dotnet restore $CSPROJ
