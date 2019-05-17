@@ -19,7 +19,7 @@ build:pomodoro_api:
 build:tasks_api:
     stage: build
     script:
-        - curl https://img.shields.io/badge/Tasks.API-failed-red.svg > --create-dirs -o public/badges/tasks_api_build.svg
+        - curl https://img.shields.io/badge/Tasks.API-failed-red.svg --create-dirs -o public/badges/tasks_api_build.svg
         - sh src/ci/build.sh tasks_api
         - curl https://img.shields.io/badge/Tasks.API-succeeded-success.svg > public/badges/tasks_api_build.svg
     allow_failure: true
