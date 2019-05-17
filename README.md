@@ -3,10 +3,6 @@
 [![build status](https://sponger94.gitlab.io/Athena/badges/pomodoro_api_build.svg)](https://gitlab.com/sponger94/Athena/badges/develop/pipeline.svg)
 [![build status](https://sponger94.gitlab.io/Athena/badges/tasks_api_build.svg)](https://gitlab.com/sponger94/Athena/badges/develop/pipeline.svg)
 
-## Description
-
-This is a sample task and time management assistant made with .NET Core Microservices that follows Pomodoro Technique. Inspired from Microsoft's [eShopOnContainers project](https://github.com/dotnet-architecture/eShopOnContainers).
-
 ### Sample User Interface
 
 <img src="https://user-images.githubusercontent.com/45746997/57596429-1457f980-7564-11e9-8de7-d1fd92a1c9ae.png" width="280"/> <img src="https://user-images.githubusercontent.com/45746997/57596413-06a27400-7564-11e9-9e93-4444e66d7aac.png" width="280"/> <img src="https://user-images.githubusercontent.com/45746997/57596419-0c985500-7564-11e9-9fba-7cfa5717b773.png" width="280"/> 
