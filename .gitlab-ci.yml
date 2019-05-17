@@ -5,19 +5,12 @@ stages:
     - test
     - deploy
 
-before_script:
-    - echo "Creating public directory..."
-    - mkdir public
-    - echo "Creating badges directory..."
-    - mkdir public/badges
-    - cd src/ci/
-
 build:pomodoro_api:
     stage: build
     script:
-        - curl https://img.shields.io/badge/Pomodoro.API-failed-red.svg > ../../public/badges/pomodoro_api_build.svg
-        - sh build.sh pomodoro_api
-        - curl https://img.shields.io/badge/Pomodoro.API-succeeded-success.svg > ../../public/badges/pomodoro_api_build.svg
+        - curl https://img.shields.io/badge/Pomodoro.API-failed-red.svg --create-dirs -o public/badges/pomodoro_api_build.svg
+        - sh src/ci/build.sh pomodoro_api
+        - curl https://img.shields.io/badge/Pomodoro.API-succeeded-success.svg > public/badges/pomodoro_api_build.svg
     allow_failure: true
     artifacts:
         paths:
@@ -26,19 +19,23 @@ build:pomodoro_api:
 build:tasks_api:
     stage: build
     script:
-        - curl https://img.shields.io/badge/Tasks.API-failed-red.svg > ../../public/badges/tasks_api_build.svg
-        - sh build.sh tasks_api
-        - curl https://img.shields.io/badge/Tasks.API-succeeded-success.svg > ../../public/badges/tasks_api_build.svg
+        - curl https://img.shields.io/badge/Tasks.API-failed-red.svg > --create-dirs -o tasks_api_build.svg
+        - sh src/ci/build.sh tasks_api
+        - curl https://img.shields.io/badge/Tasks.API-succeeded-success.svg > tasks_api_build.svg
+    allow_failure: true
+    artifacts:
+        paths:
+            - public/badges/pomodoro_api_build.svg
 
 test:pomodoro_api:
     stage: test
     script: 
-        - sh test.sh pomodoro_api
+        - sh src/ci/test.sh pomodoro_api
 
 test:tasks_api:
     stage: test
     script: 
-        - sh test.sh tasks_api
+        - sh src/ci/test.sh tasks_api
         
 pages:
   stage: deploy
@@ -46,6 +43,6 @@ pages:
     - echo "Deploying pages..."
   artifacts:
     paths:
-      - public
+      - public/
   only:
     - develop
